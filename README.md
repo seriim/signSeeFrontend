@@ -1,326 +1,150 @@
 # SignSee - Jamaican Sign Language Learning Platform
 
-**Tagline:** Bridging communication one sign at a time.
+**Bridging communication one sign at a time.**
 
-SignSee is a gamified, AI-powered learning platform designed to make learning Jamaican Sign Language (JSL) fun, accessible, and interactive. The app helps both deaf and hearing users learn, practice, and communicate more effectively through innovative technology and engaging design.
+A gamified learning platform for Jamaican Sign Language (JSL) featuring AI-powered gesture recognition, interactive lessons, and real-time practice sessions.
 
-## Problem Statement
+## ✨ Features
 
-Deaf and hard-of-hearing Jamaicans face communication barriers daily, especially because Jamaican Sign Language (JSL) resources are scarce, outdated, or boring. Hearing individuals also lack accessible ways to learn JSL quickly or interactively.
+### 🎯 Learning Modules
+- Structured curriculum with beginner to advanced levels
+- Interactive lessons with visual demonstrations
+- Module quizzes with immediate feedback
+- Progress tracking and XP system
 
-## Solution
-
-SignSee provides a comprehensive learning platform that combines:
-- Gamified learning modules with levels, badges, and streaks
-- AI-powered gesture recognition for real-time practice feedback
-- English to JSL translation with visual demonstrations
-- Interactive quizzes and knowledge assessments
-- Progress tracking and achievement systems
-
-## Core Features
-
-### 1. Gamified Learning Modules
-- Structured curriculum from beginner to advanced levels
-- Interactive lessons with step-by-step instructions
-- XP points, levels, and progression system
-- Daily streak tracking to build learning habits
-- Unlockable badges and achievements
-
-### 2. AI-Powered Sign Recognition
-- Real-time hand gesture verification using webcam
+### 🤖 AI-Powered Practice
+- Real-time hand gesture recognition using webcam
 - MediaPipe integration for accurate hand tracking
-- Instant feedback on sign accuracy
 - Practice sessions with confidence scoring
-- Support for multiple sign variations
+- Instant feedback on sign accuracy
 
-### 3. English to JSL Translator
+### 📚 English to JSL Translator
 - Instant translation of words and phrases
-- Visual demonstrations with images/videos
+- Visual sign demonstrations with images
 - Detailed sign descriptions and instructions
-- Category-based sign organization
-- Search history and favorites
+- Search history and popular words
 
-### 4. Quizzes & Knowledge Checks
-- Multiple choice questions
-- True/false assessments
-- Gesture recognition challenges
-- Immediate feedback with explanations
+### 🧠 Quiz System
+- Multiple choice questions with visual options
+- Module-specific quizzes
 - Score tracking and performance analytics
+- Immediate feedback with explanations
 
-### 5. Progress Tracking Dashboard
-- Comprehensive learning statistics
-- Weekly activity charts
-- Achievement showcase
-- Streak monitoring
-- Recent activity feed
-- Level progression tracking
+## 🛠 Tech Stack
 
-## Tech Stack
-
-- **Frontend Framework:** React with TypeScript
+- **Frontend:** Next.js 15, React 19, TypeScript
 - **Styling:** TailwindCSS v4
-- **UI Components:** shadcn/ui
-- **Backend:** Supabase (Database, Auth, Real-time)
-- **AI/ML:** MediaPipe for hand tracking, TensorFlow.js for gesture recognition
-- **Routing:** Next.js App Router
-- **State Management:** React Hooks (useState, useEffect)
+- **UI Components:** shadcn/ui (Radix UI)
+- **Database:** Supabase (with mock data fallback)
+- **AI/ML:** MediaPipe for hand tracking
 - **Deployment:** Vercel
 
-## Project Structure
+## 🚀 Quick Start
 
-\`\`\`
-signsee-app/
-├── app/
-│   ├── page.tsx                 # Landing page
-│   ├── learn/                   # Learning modules
-│   │   ├── page.tsx            # Module selection
-│   │   ├── module/[id]/        # Individual module view
-│   │   └── lesson/[id]/        # Lesson player
-│   ├── practice/               # Practice sessions
-│   ├── translator/             # English to JSL translator
-│   ├── quiz/                   # Quiz system
-│   └── dashboard/              # Progress tracking
-├── components/
-│   ├── navigation.tsx          # Main navigation
-│   ├── gesture-recognition.tsx # AI gesture component
-│   ├── practice-session.tsx    # Practice interface
-│   ├── sign-display.tsx        # Sign visualization
-│   └── quiz-card.tsx           # Quiz preview card
-├── lib/
-│   ├── types.ts                # TypeScript definitions
-│   ├── supabase.ts             # Supabase client configuration
-│   ├── api.ts                  # API service functions
-│   └── mock-data.ts            # Sample data (deprecated)
-├── hooks/
-│   └── use-api.ts              # Custom API hooks
-└── public/                     # Static assets
-\`\`\`
-
-## Key Pages
-
-### Landing Page (`/`)
-- Hero section with value proposition
-- Feature highlights
-- Call-to-action buttons
-- Social proof metrics
-
-### Learning Hub (`/learn`)
-- Module cards with progress indicators
-- Difficulty levels (Beginner, Intermediate, Advanced)
-- Lesson count and XP rewards
-- Continue learning suggestions
-
-### Lesson Player (`/learn/lesson/[id]`)
-
-## Quick Start
-
-1. **Clone the repository**:
+1. **Clone and install:**
    ```bash
    git clone <your-repo-url>
-   cd signsee-frontend
-   ```
-
-2. **Install dependencies**:
-   ```bash
+   cd signSeeFrontend
    npm install
    ```
 
-3. **Set up environment variables**:
+2. **Set up environment variables:**
    ```bash
-   cp .env.local.example .env.local
-   # Edit .env.local with your Supabase credentials
+   # Create .env.local with placeholder values (uses mock data)
+   echo 'NEXT_PUBLIC_SUPABASE_URL=placeholder
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=placeholder' > .env.local
    ```
 
-4. **Set up Supabase backend**:
-   - Follow the instructions in `BACKEND_INTEGRATION.md`
-   - Create the database schema
-   - Configure Row Level Security policies
-
-5. **Run the development server**:
+3. **Run development server:**
    ```bash
    npm run dev
    ```
 
-6. **Deploy to Vercel**:
-   - Follow the instructions in `VERCEL_DEPLOYMENT.md`
-   - Connect your GitHub repository to Vercel
-   - Set up environment variables in Vercel dashboard
+4. **Open [http://localhost:3000](http://localhost:3000)**
 
-## Backend Integration
+## 📁 Project Structure
 
-This app uses Supabase as the backend service, providing:
-- **Database**: PostgreSQL with real-time subscriptions
-- **Authentication**: User management and session handling
-- **Storage**: File uploads for sign language videos
-- **Real-time**: Live updates for collaborative features
+```
+app/
+├── page.tsx                    # Landing page
+├── learn/                      # Learning modules
+│   ├── page.tsx               # Module selection
+│   ├── module/[id]/           # Individual modules
+│   ├── lesson/[id]/           # Lesson player
+│   └── module-quiz/[id]/      # Module quizzes
+├── practice/                   # Practice sessions
+├── translator/                 # JSL translator
+└── quiz/                      # Quiz system
 
-See `BACKEND_INTEGRATION.md` for detailed setup instructions.
+components/
+├── gesture-recognition.tsx    # AI gesture component
+├── practice-session.tsx       # Practice interface
+├── sign-display.tsx          # Sign visualization
+├── quiz-card.tsx             # Quiz components
+└── ui/                       # shadcn/ui components
+```
 
-## Deployment
+## 🎮 Key Pages
 
-The app is optimized for deployment on Vercel:
-- **Static Generation**: Optimized for performance
-- **Edge Functions**: Serverless API routes
-- **CDN**: Global content delivery
-- **Analytics**: Built-in performance monitoring
+- **`/`** - Landing page with feature overview
+- **`/learn`** - Module selection with progress tracking
+- **`/learn/module/[id]`** - Individual learning modules
+- **`/learn/lesson/[id]`** - Interactive lesson player
+- **`/learn/module-quiz/[id]`** - Module-specific quizzes
+- **`/practice`** - AI-powered practice sessions
+- **`/practice/session`** - Real-time gesture recognition
+- **`/translator`** - English to JSL translation
+- **`/quiz`** - General quiz system
 
-See `VERCEL_DEPLOYMENT.md` for deployment instructions.
+## 🔧 Development
 
-### Lesson Player (`/learn/lesson/[id]`)
-- Multi-step lesson interface (Instruction, Practice, Quiz)
-- Video/image demonstrations
-- Interactive practice with AI feedback
-- Progress tracking within lessons
+### Available Scripts
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
-### Translator (`/translator`)
-- Search input for words/phrases
-- Real-time translation results
-- Visual sign demonstrations
-- Sign descriptions and categories
-- Recent searches and popular words
+### Environment Setup
+The app works with mock data by default. For production:
+1. Set up Supabase project
+2. Update `.env.local` with real credentials
+3. See `ENVIRONMENT_SETUP.md` for details
 
-### Practice Mode (`/practice`)
-- Webcam-based gesture recognition
-- Real-time feedback with confidence scores
-- Practice session tracking
-- XP rewards for successful attempts
+## 🎨 Design System
 
-### Quiz System (`/quiz`)
-- Multiple question types
-- Progress bar and timer
-- Immediate feedback with explanations
-- Results screen with detailed analytics
-- Retry and continue learning options
+- **Colors:** Blue (primary), Coral (accent), Teal (secondary)
+- **Typography:** System fonts with clear hierarchy
+- **Layout:** Mobile-first responsive design
+- **Components:** Consistent shadcn/ui design system
 
-### Dashboard (`/dashboard`)
-- User statistics (Level, XP, Streak)
-- Learning progress charts
-- Achievement showcase
-- Weekly activity visualization
-- Recent activity feed
-- Quick action buttons
+## 📊 Gamification
 
-## Design System
+- **XP System:** Earn points for completing lessons and quizzes
+- **Levels:** Progress through learning levels
+- **Streaks:** Daily learning streak tracking
+- **Achievements:** Unlockable badges and milestones
 
-### Color Palette
-- **Primary (Blue):** Trust, communication, learning
-- **Accent (Coral):** Encouragement, warmth, engagement
-- **Secondary (Teal):** Growth, gamification, achievement
-- **Neutrals:** White, grays for backgrounds and text
-
-### Typography
-- **Headings:** Bold, clear hierarchy
-- **Body Text:** Readable with proper line-height (1.5-1.6)
-- **Font Stack:** System fonts for optimal performance
-
-### Layout Principles
-- Mobile-first responsive design
-- Flexbox for most layouts
-- CSS Grid for complex 2D layouts
-- Consistent spacing using Tailwind scale
-- Accessible color contrast ratios
-
-## Gamification Elements
-
-### XP System
-- Earn XP for completing lessons (50 XP)
-- Quiz completion rewards (10 XP per correct answer)
-- Practice session bonuses (30 XP per session)
-- Achievement unlocks (50-250 XP)
-
-### Levels
-- Level up every 1500 XP
-- Unlock new content at higher levels
-- Visual level badges and indicators
-
-### Streaks
-- Daily learning streak tracking
-- Streak milestones with special rewards
-- Visual flame indicator for active streaks
-
-### Achievements
-- First Steps: Complete first lesson
-- Week Warrior: 7-day streak
-- Quiz Master: 100% quiz score
-- Sign Collector: Learn 50 signs
-- Module Champion: Complete all module lessons
-
-## Future Enhancements
-
-### Phase 2
-- User authentication and profiles
-- Social features (leaderboards, friend challenges)
-- Offline mode support
-- Mobile app (React Native)
-- Video recording for practice review
-
-### Phase 3
-- Live tutoring sessions
-- Community forums
-- User-generated content
-- Advanced AI with personalized learning paths
-- Speech-to-sign translation
-
-### Phase 4
-- Integration with educational institutions
-- Certification programs
-- Expanded sign language support (ASL, BSL, etc.)
-- AR/VR practice environments
-
-## Getting Started
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
-2. Install dependencies:
-   \`\`\`bash
-   npm install
-   \`\`\`
-
-3. Run the development server:
-   \`\`\`bash
-   npm run dev
-   \`\`\`
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-### Building for Production
-
-\`\`\`bash
-npm run build
-npm start
-\`\`\`
-
-## Contributing
-
-We welcome contributions to make SignSee even better! Please follow these guidelines:
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
 4. Submit a pull request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.
+MIT License
 
-## Contact & Support
+## 🙏 Acknowledgments
 
-For questions, feedback, or support, please reach out through:
-- GitHub Issues
-- Email: support@signsee.app
-
-## Acknowledgments
-
-- Jamaican Deaf community for cultural insights
-- MediaPipe team for hand tracking technology
-- shadcn/ui for beautiful component library
-- All contributors and beta testers
+- **MediaPipe** - Hand tracking technology
+- **shadcn/ui** - Beautiful component library
+- **Radix UI** - Accessible component primitives
+- **Next.js** - React framework
+- **TailwindCSS** - Utility-first CSS framework
+- **Supabase** - Backend-as-a-Service
+- **Jamaican Deaf Community** - Cultural insights and feedback
 
 ---
 
-**SignSee** - Bridging communication one sign at a time.
+**SignSee** - Making JSL learning accessible and engaging for everyone.

@@ -136,13 +136,18 @@ export default function LearnPage() {
             <Link href="/translator">
               <Button
                 variant="ghost"
-                className="rounded-full hover:bg-primary/10"
+                className="cursor-pointer rounded-full hover:bg-primary/10"
               >
                 Translator
               </Button>
             </Link>
             <Link href="/practice">
-              <Button variant="outline" className="rounded-full border-primary/30 hover:bg-primary/10">Practice</Button>
+              <Button
+                variant="outline"
+                className="cursor-pointer rounded-full border-primary/30 hover:bg-primary/10"
+              >
+                Practice
+              </Button>
             </Link>
           </nav>
         </div>

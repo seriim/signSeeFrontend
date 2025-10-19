@@ -1,75 +1,95 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Target, Trophy, Clock, CheckCircle2, XCircle, ArrowRight, Home } from "lucide-react"
-import { getModuleQuiz } from "@/lib/module-quizzes"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  Target,
+  Trophy,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  ArrowRight,
+  Home,
+} from "lucide-react";
+import { getModuleQuiz } from "@/lib/module-quizzes";
 
-export default function ModuleQuizPage({ params }: { params: { id: string } }) {
-  const moduleId = Number.parseInt(params.id)
-  const quizQuestions = getModuleQuiz(moduleId)
+import { use } from "react";
 
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
-  const [showResult, setShowResult] = useState(false)
-  const [score, setScore] = useState(0)
-  const [answers, setAnswers] = useState<boolean[]>([])
-  const [quizComplete, setQuizComplete] = useState(false)
+export default function ModuleQuizPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const moduleId = Number.parseInt(id);
+  const quizQuestions = getModuleQuiz(moduleId);
 
-  const question = quizQuestions[currentQuestion]
-  const progress = ((currentQuestion + 1) / quizQuestions.length) * 100
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState<boolean[]>([]);
+  const [quizComplete, setQuizComplete] = useState(false);
+
+  const question = quizQuestions[currentQuestion];
+  const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
 
   const handleAnswerSelect = (answerIndex: number) => {
-    if (showResult) return
-    setSelectedAnswer(answerIndex)
-  }
+    if (showResult) return;
+    setSelectedAnswer(answerIndex);
+  };
 
   const handleSubmitAnswer = () => {
-    if (selectedAnswer === null) return
+    if (selectedAnswer === null) return;
 
-    const isCorrect = selectedAnswer === question.correctAnswer
-    setShowResult(true)
-    setAnswers([...answers, isCorrect])
+    const isCorrect = selectedAnswer === question.correctAnswer;
+    setShowResult(true);
+    setAnswers([...answers, isCorrect]);
 
     if (isCorrect) {
-      setScore(score + 1)
+      setScore(score + 1);
     }
-  }
+  };
 
   const handleNextQuestion = () => {
     if (currentQuestion < quizQuestions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-      setSelectedAnswer(null)
-      setShowResult(false)
+      setCurrentQuestion(currentQuestion + 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
     } else {
-      setQuizComplete(true)
+      setQuizComplete(true);
     }
-  }
+  };
 
   const handleRestartQuiz = () => {
-    setCurrentQuestion(0)
-    setSelectedAnswer(null)
-    setShowResult(false)
-    setScore(0)
-    setAnswers([])
-    setQuizComplete(false)
-  }
+    setCurrentQuestion(0);
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setScore(0);
+    setAnswers([]);
+    setQuizComplete(false);
+  };
 
   if (quizComplete) {
-    const percentage = Math.round((score / quizQuestions.length) * 100)
-    const passed = percentage >= 70
+    const percentage = Math.round((score / quizQuestions.length) * 100);
+    const passed = percentage >= 70;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
         <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto flex items-center justify-between px-4 py-4">
-            <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105"
+            >
               <Target className="h-6 w-6 text-primary" />
-              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                SignSee
+              </span>
             </Link>
           </div>
         </header>
@@ -82,12 +102,18 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
                   passed ? "bg-accent/20" : "bg-secondary/20"
                 }`}
               >
-                <Trophy className={`h-8 w-8 ${passed ? "text-accent" : "text-secondary"}`} />
+                <Trophy
+                  className={`h-8 w-8 ${
+                    passed ? "text-accent" : "text-secondary"
+                  }`}
+                />
               </div>
 
               <h1 className="mb-1 text-2xl font-bold">Module Quiz Complete!</h1>
               <p className="mb-4 text-sm text-muted-foreground">
-                {passed ? "Congratulations! You passed!" : "Keep practicing to improve your score!"}
+                {passed
+                  ? "Congratulations! You passed!"
+                  : "Keep practicing to improve your score!"}
               </p>
 
               <div className="mb-4 grid gap-3 md:grid-cols-3">
@@ -98,12 +124,20 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
                   </p>
                 </Card>
                 <Card className="border-2 border-accent bg-gradient-to-b from-accent/15 to-accent/5 p-3 rounded-2xl">
-                  <p className="mb-0.5 text-xs text-muted-foreground">Percentage</p>
-                  <p className="text-2xl font-bold text-accent">{percentage}%</p>
+                  <p className="mb-0.5 text-xs text-muted-foreground">
+                    Percentage
+                  </p>
+                  <p className="text-2xl font-bold text-accent">
+                    {percentage}%
+                  </p>
                 </Card>
                 <Card className="border-2 border-primary/40 bg-white/50 p-3 rounded-2xl">
-                  <p className="mb-0.5 text-xs text-muted-foreground">XP Earned</p>
-                  <p className="text-2xl font-bold text-primary">+{score * 50}</p>
+                  <p className="mb-0.5 text-xs text-muted-foreground">
+                    XP Earned
+                  </p>
+                  <p className="text-2xl font-bold text-primary">
+                    +{score * 50}
+                  </p>
                 </Card>
               </div>
 
@@ -126,7 +160,11 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
               </div>
 
               <div className="flex gap-3">
-                <Button onClick={handleRestartQuiz} variant="outline" className="flex-1 bg-transparent">
+                <Button
+                  onClick={handleRestartQuiz}
+                  variant="outline"
+                  className="flex-1 bg-transparent"
+                >
                   Retry Quiz
                 </Button>
                 <Link href="/learn" className="flex-1">
@@ -137,7 +175,7 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!question) {
@@ -150,18 +188,26 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
           </Link>
         </Card>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
       <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105"
+          >
             <Target className="h-6 w-6 text-primary" />
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              SignSee
+            </span>
           </Link>
-          <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/10">
+          <Badge
+            variant="outline"
+            className="rounded-full border-primary/30 bg-primary/10"
+          >
             <Clock className="mr-1 h-3 w-3" />
             Question {currentQuestion + 1}/{quizQuestions.length}
           </Badge>
@@ -173,15 +219,21 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
           <div className="mb-4">
             <div className="mb-1 flex items-center justify-between text-xs">
               <span className="font-medium">Module Quiz Progress</span>
-              <span className="text-muted-foreground">{Math.round(progress)}%</span>
+              <span className="text-muted-foreground">
+                {Math.round(progress)}%
+              </span>
             </div>
             <Progress value={progress} className="h-2 rounded-full" />
           </div>
 
           <Card className="border-2 border-primary/40 bg-white/50 p-6 rounded-2xl">
             <div className="mb-6">
-              <Badge className="mb-4 bg-primary/10 text-primary">Hand Sign Recognition</Badge>
-              <h2 className="text-2xl font-bold text-balance">{question.question}</h2>
+              <Badge className="mb-4 bg-primary/10 text-primary">
+                Hand Sign Recognition
+              </Badge>
+              <h2 className="text-2xl font-bold text-balance">
+                {question.question}
+              </h2>
             </div>
 
             <div className="mb-8 overflow-hidden rounded-lg border-2">
@@ -206,8 +258,8 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
                           : "border-secondary bg-secondary/20"
                         : "border-primary bg-primary/10"
                       : showResult && index === question.correctAnswer
-                        ? "border-accent bg-accent/20"
-                        : "border-border hover:border-primary"
+                      ? "border-accent bg-accent/20"
+                      : "border-border hover:border-primary"
                   } ${showResult ? "cursor-not-allowed" : "cursor-pointer"}`}
                 >
                   <div className="space-y-2 p-3">
@@ -216,17 +268,21 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
                       alt={option.label}
                       className="h-32 w-full object-cover rounded"
                     />
-                    <p className="font-medium text-sm text-center">{option.label}</p>
+                    <p className="font-medium text-sm text-center">
+                      {option.label}
+                    </p>
                     {showResult && index === question.correctAnswer && (
                       <div className="flex justify-center">
                         <CheckCircle2 className="h-5 w-5 text-accent" />
                       </div>
                     )}
-                    {showResult && selectedAnswer === index && index !== question.correctAnswer && (
-                      <div className="flex justify-center">
-                        <XCircle className="h-5 w-5 text-secondary" />
-                      </div>
-                    )}
+                    {showResult &&
+                      selectedAnswer === index &&
+                      index !== question.correctAnswer && (
+                        <div className="flex justify-center">
+                          <XCircle className="h-5 w-5 text-secondary" />
+                        </div>
+                      )}
                   </div>
                 </button>
               ))}
@@ -241,9 +297,13 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
                 }`}
               >
                 <p className="mb-1 font-semibold">
-                  {selectedAnswer === question.correctAnswer ? "Correct!" : "Incorrect"}
+                  {selectedAnswer === question.correctAnswer
+                    ? "Correct!"
+                    : "Incorrect"}
                 </p>
-                <p className="text-sm text-muted-foreground">{question.explanation}</p>
+                <p className="text-sm text-muted-foreground">
+                  {question.explanation}
+                </p>
               </div>
             )}
 
@@ -255,7 +315,11 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
                 </Button>
               </Link>
               {!showResult ? (
-                <Button onClick={handleSubmitAnswer} disabled={selectedAnswer === null} className="flex-1">
+                <Button
+                  onClick={handleSubmitAnswer}
+                  disabled={selectedAnswer === null}
+                  className="flex-1"
+                >
                   Submit Answer
                 </Button>
               ) : (
@@ -283,12 +347,15 @@ export default function ModuleQuizPage({ params }: { params: { id: string } }) {
             <div className="flex items-center gap-2">
               <XCircle className="h-5 w-5 text-secondary" />
               <span>
-                Incorrect: <span className="font-semibold">{answers.filter((a) => !a).length}</span>
+                Incorrect:{" "}
+                <span className="font-semibold">
+                  {answers.filter((a) => !a).length}
+                </span>
               </span>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

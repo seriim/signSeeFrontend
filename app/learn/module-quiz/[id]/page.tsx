@@ -1,115 +1,27 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Target, Trophy, Clock, CheckCircle2, XCircle, ArrowRight, Home } from "lucide-react"
+import { getModuleQuiz } from "@/lib/module-quizzes"
 
-interface QuizQuestion {
-  id: number
-  type: "multiple-choice" | "gesture-recognition" | "true-false"
-  question: string
-  options?: string[]
-  correctAnswer: string | number
-  imageUrl?: string
-  explanation: string
-}
+export default function ModuleQuizPage({ params }: { params: { id: string } }) {
+  const moduleId = Number.parseInt(params.id)
+  const quizQuestions = getModuleQuiz(moduleId)
 
-const quizQuestions: QuizQuestion[] = [
-  {
-    id: 1,
-    type: "multiple-choice",
-    question: "Which of the following is the correct JSL sign for 'Hello'?",
-    options: ["Hello", "Goodbye", "Thank You", "Please"],
-    correctAnswer: 0,
-    explanation: "The JSL sign for 'Hello' is to raise your hand to your forehead and move it forward in a wave motion.",
-  },
-  {
-    id: 2,
-    type: "true-false",
-    question: "JSL (Jamaican Sign Language) is the same as ASL (American Sign Language)",
-    options: ["True", "False"],
-    correctAnswer: 1,
-    explanation: "False! JSL has its own unique grammar, vocabulary, and cultural context distinct from ASL.",
-  },
-  {
-    id: 3,
-    type: "multiple-choice",
-    question: "Which sign is used to express gratitude?",
-    options: ["Sorry", "Thank You", "Please", "Help"],
-    correctAnswer: 1,
-    explanation: "Touch your chin with fingertips and move your hand forward to sign 'Thank You'.",
-  },
-  {
-    id: 4,
-    type: "gesture-recognition",
-    question: "Perform the JSL sign for 'Hello'",
-    correctAnswer: "hello",
-    explanation: "Great job! You correctly performed the sign for 'Hello'.",
-  },
-  {
-    id: 5,
-    type: "multiple-choice",
-    question: "What category does the sign 'Please' belong to?",
-    options: ["Greetings", "Polite Expressions", "Basic Responses", "Emotions"],
-    correctAnswer: 1,
-    explanation: "'Please' is a polite expression used to make requests courteously.",
-  },
-  {
-    id: 6,
-    type: "multiple-choice",
-    question: "How do you sign 'Goodbye' in JSL?",
-    options: ["Wave hand forward", "Close fingers to palm", "Both hands up", "Point away"],
-    correctAnswer: 1,
-    explanation: "To sign 'Goodbye', hold your hand up with palm facing out, then close your fingers down toward your palm in a waving motion.",
-  },
-  {
-    id: 7,
-    type: "multiple-choice",
-    question: "What is the most important element when signing phrases?",
-    options: ["Hand speed", "Facial expressions", "Arm position", "All of the above"],
-    correctAnswer: 3,
-    explanation: "All elements are important - hand speed, facial expressions, and arm position all contribute to clear communication in JSL.",
-  },
-]
-
-// Function to shuffle array
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const shuffled = [...array]
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
-}
-
-export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showResult, setShowResult] = useState(false)
   const [score, setScore] = useState(0)
   const [answers, setAnswers] = useState<boolean[]>([])
   const [quizComplete, setQuizComplete] = useState(false)
-  const [timeElapsed, setTimeElapsed] = useState(0)
-  const [shuffledOptions, setShuffledOptions] = useState<string[]>([])
-  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number>(0)
 
   const question = quizQuestions[currentQuestion]
   const progress = ((currentQuestion + 1) / quizQuestions.length) * 100
-
-  // Shuffle options when question changes
-  useEffect(() => {
-    if (question.options) {
-      const shuffled = shuffleArray(question.options)
-      setShuffledOptions(shuffled)
-      // Find the new index of the correct answer after shuffling
-      const correctAnswer = question.options[question.correctAnswer as number]
-      setCorrectAnswerIndex(shuffled.indexOf(correctAnswer))
-    }
-  }, [currentQuestion, question.options, question.correctAnswer])
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showResult) return
@@ -119,7 +31,7 @@ export default function QuizPage() {
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) return
 
-    const isCorrect = selectedAnswer === correctAnswerIndex
+    const isCorrect = selectedAnswer === question.correctAnswer
     setShowResult(true)
     setAnswers([...answers, isCorrect])
 
@@ -145,7 +57,6 @@ export default function QuizPage() {
     setScore(0)
     setAnswers([])
     setQuizComplete(false)
-    setTimeElapsed(0)
   }
 
   if (quizComplete) {
@@ -174,7 +85,7 @@ export default function QuizPage() {
                 <Trophy className={`h-8 w-8 ${passed ? "text-accent" : "text-secondary"}`} />
               </div>
 
-              <h1 className="mb-1 text-2xl font-bold">Quiz Complete!</h1>
+              <h1 className="mb-1 text-2xl font-bold">Module Quiz Complete!</h1>
               <p className="mb-4 text-sm text-muted-foreground">
                 {passed ? "Congratulations! You passed!" : "Keep practicing to improve your score!"}
               </p>
@@ -192,7 +103,7 @@ export default function QuizPage() {
                 </Card>
                 <Card className="border-2 border-primary/40 bg-white/50 p-3 rounded-2xl">
                   <p className="mb-0.5 text-xs text-muted-foreground">XP Earned</p>
-                  <p className="text-2xl font-bold text-primary">+{score * 10}</p>
+                  <p className="text-2xl font-bold text-primary">+{score * 50}</p>
                 </Card>
               </div>
 
@@ -219,12 +130,25 @@ export default function QuizPage() {
                   Retry Quiz
                 </Button>
                 <Link href="/learn" className="flex-1">
-                  <Button className="w-full">Continue Learning</Button>
+                  <Button className="w-full">Back to Learning Path</Button>
                 </Link>
               </div>
             </Card>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  if (!question) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Card className="p-8 text-center">
+          <h2 className="mb-4 text-2xl font-bold">Quiz Not Found</h2>
+          <Link href="/learn">
+            <Button>Back to Learning Path</Button>
+          </Link>
+        </Card>
       </div>
     )
   }
@@ -245,92 +169,69 @@ export default function QuizPage() {
       </header>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="mx-auto max-w-3xl">
-          {/* Progress Bar */}
+        <div className="mx-auto max-w-4xl">
           <div className="mb-4">
             <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="font-medium">Quiz Progress</span>
+              <span className="font-medium">Module Quiz Progress</span>
               <span className="text-muted-foreground">{Math.round(progress)}%</span>
             </div>
             <Progress value={progress} className="h-2 rounded-full" />
           </div>
 
-          {/* Question Card */}
-          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+          <Card className="border-2 border-primary/40 bg-white/50 p-6 rounded-2xl">
             <div className="mb-6">
-              <Badge className="mb-4 bg-primary/10 text-primary">
-                {question.type === "multiple-choice"
-                  ? "Multiple Choice"
-                  : question.type === "true-false"
-                    ? "True/False"
-                    : "Gesture Recognition"}
-              </Badge>
+              <Badge className="mb-4 bg-primary/10 text-primary">Hand Sign Recognition</Badge>
               <h2 className="text-2xl font-bold text-balance">{question.question}</h2>
             </div>
 
-            {/* Question Image */}
-            {question.imageUrl && (
-              <div className="mb-6 overflow-hidden rounded-lg border-2">
-                <img
-                  src={question.imageUrl || "/placeholder.svg"}
-                  alt="JSL Sign"
-                  className="h-64 w-full object-cover"
-                />
-              </div>
-            )}
+            <div className="mb-8 overflow-hidden rounded-lg border-2">
+              <img
+                src={question.imageUrl || "/placeholder.svg"}
+                alt="Hand sign"
+                className="h-64 w-full object-cover"
+              />
+            </div>
 
-            {/* Answer Options */}
-            {question.type !== "gesture-recognition" && shuffledOptions.length > 0 && (
-              <div className="mb-6 space-y-3">
-                {shuffledOptions.map((option, index) => (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={showResult}
-                    className={`w-full rounded-lg border-2 p-4 text-left transition-all ${
-                      selectedAnswer === index
-                        ? showResult
-                          ? index === correctAnswerIndex
-                            ? "border-accent bg-accent/20"
-                            : "border-secondary bg-secondary/20"
-                          : "border-primary bg-primary/10"
-                        : showResult && index === correctAnswerIndex
+            <div className="mb-6 grid gap-4 md:grid-cols-2">
+              {question.options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleAnswerSelect(index)}
+                  disabled={showResult}
+                  className={`rounded-lg border-2 overflow-hidden transition-all ${
+                    selectedAnswer === index
+                      ? showResult
+                        ? index === question.correctAnswer
                           ? "border-accent bg-accent/20"
-                          : "border-border hover:border-primary"
-                    } ${showResult ? "cursor-not-allowed" : "cursor-pointer"}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{option}</span>
-                      {showResult && index === correctAnswerIndex && (
+                          : "border-secondary bg-secondary/20"
+                        : "border-primary bg-primary/10"
+                      : showResult && index === question.correctAnswer
+                        ? "border-accent bg-accent/20"
+                        : "border-border hover:border-primary"
+                  } ${showResult ? "cursor-not-allowed" : "cursor-pointer"}`}
+                >
+                  <div className="space-y-2 p-3">
+                    <img
+                      src={option.imageUrl || "/placeholder.svg"}
+                      alt={option.label}
+                      className="h-32 w-full object-cover rounded"
+                    />
+                    <p className="font-medium text-sm text-center">{option.label}</p>
+                    {showResult && index === question.correctAnswer && (
+                      <div className="flex justify-center">
                         <CheckCircle2 className="h-5 w-5 text-accent" />
-                      )}
-                      {showResult && selectedAnswer === index && index !== correctAnswerIndex && (
+                      </div>
+                    )}
+                    {showResult && selectedAnswer === index && index !== question.correctAnswer && (
+                      <div className="flex justify-center">
                         <XCircle className="h-5 w-5 text-secondary" />
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Gesture Recognition */}
-            {question.type === "gesture-recognition" && (
-              <div className="mb-6">
-                <Card className="border-2 border-dashed p-8 text-center">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                    <Target className="h-8 w-8 text-primary" />
+                      </div>
+                    )}
                   </div>
-                  <p className="mb-4 text-muted-foreground">
-                    Use your webcam to perform the sign. The AI will verify your gesture.
-                  </p>
-                  <Button variant="outline" className="bg-transparent">
-                    Start Camera
-                  </Button>
-                </Card>
-              </div>
-            )}
+                </button>
+              ))}
+            </div>
 
-            {/* Explanation */}
             {showResult && (
               <div
                 className={`mb-6 rounded-lg border-2 p-4 ${
@@ -346,7 +247,6 @@ export default function QuizPage() {
               </div>
             )}
 
-            {/* Action Buttons */}
             <div className="flex gap-3">
               <Link href="/learn" className="flex-1">
                 <Button variant="outline" className="w-full bg-transparent">
@@ -373,7 +273,6 @@ export default function QuizPage() {
             </div>
           </Card>
 
-          {/* Score Display */}
           <div className="mt-6 flex items-center justify-center gap-6 text-sm">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-accent" />

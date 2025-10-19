@@ -11,7 +11,6 @@ export function Navigation() {
   const links = [
     { href: "/learn", label: "Learn", icon: BookOpen },
     { href: "/translator", label: "Translator", icon: Video },
-    { href: "/practice", label: "Practice", icon: Hand },
     { href: "/dashboard", label: "Dashboard", icon: Trophy },
   ]
 

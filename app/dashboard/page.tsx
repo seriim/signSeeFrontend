@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useProgress } from "@/hooks/use-progress"
 import {
   Target,
   Trophy,
@@ -19,6 +20,7 @@ import {
   Zap,
   CheckCircle2,
   Lock,
+  RotateCcw,
 } from "lucide-react"
 
 const userStats = {
@@ -115,9 +117,33 @@ const weeklyProgress = [
 
 export default function DashboardPage() {
   const [selectedTab, setSelectedTab] = useState("overview")
-  const levelProgress = (userStats.xp / userStats.xpToNextLevel) * 100
-  const lessonsProgress = (userStats.completedLessons / userStats.totalLessons) * 100
-  const quizzesProgress = (userStats.completedQuizzes / userStats.totalQuizzes) * 100
+  const { progress, isLoaded, resetProgress } = useProgress()
+
+  // Show loading state while progress is being loaded
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your progress...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Update userStats with real progress data
+  const realUserStats = {
+    ...userStats,
+    level: progress.level,
+    xp: progress.totalXP,
+    streak: progress.currentStreak,
+    completedLessons: progress.modules.reduce((sum, module) => sum + module.completedLessons, 0),
+    badges: progress.badges,
+  }
+
+  const levelProgress = (realUserStats.xp / realUserStats.xpToNextLevel) * 100
+  const lessonsProgress = (realUserStats.completedLessons / realUserStats.totalLessons) * 100
+  const quizzesProgress = (realUserStats.completedQuizzes / realUserStats.totalQuizzes) * 100
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
@@ -132,9 +158,6 @@ export default function DashboardPage() {
             <Link href="/learn">
               <Button variant="ghost" className="rounded-full hover:bg-primary/10">Learn</Button>
             </Link>
-            <Link href="/practice">
-              <Button variant="ghost" className="rounded-full hover:bg-primary/10">Practice</Button>
-            </Link>
             <Link href="/translator">
               <Button variant="ghost" className="rounded-full hover:bg-primary/10">Translate</Button>
             </Link>
@@ -144,9 +167,23 @@ export default function DashboardPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
-        <div className="mb-6">
-          <h1 className="mb-1 text-3xl font-bold">Welcome back, {userStats.name}!</h1>
-          <p className="text-sm text-muted-foreground">Track your progress and celebrate your achievements</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="mb-1 text-3xl font-bold">Welcome back, {realUserStats.name}!</h1>
+            <p className="text-sm text-muted-foreground">Track your progress and celebrate your achievements</p>
+          </div>
+          <Button
+            onClick={() => {
+              resetProgress()
+              window.location.reload()
+            }}
+            variant="outline"
+            size="sm"
+            className="text-muted-foreground hover:text-destructive"
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Reset Progress
+          </Button>
         </div>
 
         {/* Stats Overview */}
@@ -154,10 +191,10 @@ export default function DashboardPage() {
           <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="mb-1 flex items-center justify-between">
               <Zap className="h-6 w-6 text-primary" />
-              <Badge variant="secondary" className="rounded-full text-xs">Level {userStats.level}</Badge>
+              <Badge variant="secondary" className="rounded-full text-xs">Level {realUserStats.level}</Badge>
             </div>
-            <p className="mb-1 text-2xl font-bold">{userStats.xp} XP</p>
-            <p className="mb-2 text-xs text-muted-foreground">{userStats.xpToNextLevel - userStats.xp} to next level</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.xp} XP</p>
+            <p className="mb-2 text-xs text-muted-foreground">{realUserStats.xpToNextLevel - realUserStats.xp} to next level</p>
             <Progress value={levelProgress} className="h-2 rounded-full" />
           </Card>
 
@@ -166,7 +203,7 @@ export default function DashboardPage() {
               <Flame className="h-6 w-6 text-accent" />
               <Badge className="bg-accent/20 text-accent rounded-full text-xs">Active</Badge>
             </div>
-            <p className="mb-1 text-2xl font-bold">{userStats.streak} Days</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.streak} Days</p>
             <p className="text-xs text-muted-foreground">Current streak</p>
           </Card>
 
@@ -175,16 +212,16 @@ export default function DashboardPage() {
               <BookOpen className="h-6 w-6 text-primary" />
               <Badge className="bg-primary/20 text-primary rounded-full text-xs">Learning</Badge>
             </div>
-            <p className="mb-1 text-2xl font-bold">{userStats.signsLearned}</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.signsLearned}</p>
             <p className="text-xs text-muted-foreground">Signs learned</p>
           </Card>
 
           <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="mb-1 flex items-center justify-between">
               <Trophy className="h-6 w-6 text-primary" />
-              <Badge variant="outline" className="rounded-full text-xs">{userStats.averageScore}%</Badge>
+              <Badge variant="outline" className="rounded-full text-xs">{realUserStats.averageScore}%</Badge>
             </div>
-            <p className="mb-1 text-2xl font-bold">{userStats.completedQuizzes}</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.completedQuizzes}</p>
             <p className="text-xs text-muted-foreground">Quizzes completed</p>
           </Card>
         </div>
@@ -212,7 +249,7 @@ export default function DashboardPage() {
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="font-medium">Lessons Completed</span>
                       <span className="text-muted-foreground">
-                        {userStats.completedLessons}/{userStats.totalLessons}
+                        {realUserStats.completedLessons}/{realUserStats.totalLessons}
                       </span>
                     </div>
                     <Progress value={lessonsProgress} className="h-3" />
@@ -222,7 +259,7 @@ export default function DashboardPage() {
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="font-medium">Quizzes Completed</span>
                       <span className="text-muted-foreground">
-                        {userStats.completedQuizzes}/{userStats.totalQuizzes}
+                        {realUserStats.completedQuizzes}/{realUserStats.totalQuizzes}
                       </span>
                     </div>
                     <Progress value={quizzesProgress} className="h-3" />
@@ -232,7 +269,7 @@ export default function DashboardPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-muted-foreground">Total Practice Time</p>
-                        <p className="text-2xl font-bold">{userStats.totalPracticeTime} min</p>
+                        <p className="text-2xl font-bold">{realUserStats.totalPracticeTime} min</p>
                       </div>
                       <Calendar className="h-8 w-8 text-muted-foreground" />
                     </div>
@@ -287,13 +324,6 @@ export default function DashboardPage() {
                     <BookOpen className="h-6 w-6 text-primary" />
                     <span className="text-sm font-semibold">Resume Lessons</span>
                     <span className="text-xs text-muted-foreground">6 lessons remaining</span>
-                  </Button>
-                </Link>
-                <Link href="/practice">
-                  <Button variant="outline" className="h-auto w-full flex-col gap-1 bg-accent/15 border-2 border-accent rounded-2xl py-3">
-                    <Target className="h-6 w-6 text-accent" />
-                    <span className="text-sm font-semibold">Practice Signs</span>
-                    <span className="text-xs text-muted-foreground">Improve your skills</span>
                   </Button>
                 </Link>
                 <Link href="/quiz">

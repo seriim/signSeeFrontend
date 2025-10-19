@@ -7,50 +7,33 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Play, Camera, Lightbulb, Target, Star } from "lucide-react"
-
-const practiceSigns = [
-  {
-    id: 1,
-    name: "Hello",
-    instruction: "Wave your hand forward from your forehead",
-    xpReward: 10,
-  },
-  {
-    id: 2,
-    name: "Thank You",
-    instruction: "Touch your chin and move hand forward",
-    xpReward: 10,
-  },
-  {
-    id: 3,
-    name: "Please",
-    instruction: "Circle your hand on your chest",
-    xpReward: 10,
-  },
-  {
-    id: 4,
-    name: "Yes",
-    instruction: "Nod your fist up and down",
-    xpReward: 10,
-  },
-  {
-    id: 5,
-    name: "No",
-    instruction: "Close your fingers to thumb twice",
-    xpReward: 10,
-  },
-]
+import { useSigns } from "@/hooks/use-api"
+import { config } from "@/lib/config"
+import { PracticeLoadingScreen } from "@/components/ui/loading-screen"
 
 export default function PracticePage() {
   const [isStarting, setIsStarting] = useState(false)
   const router = useRouter()
+  const { signs, loading } = useSigns()
 
   const handleStartPractice = () => {
     setIsStarting(true)
     router.push("/practice/session")
   }
 
+  // Use first N signs from the API based on config, or fallback to mock data if loading
+  const practiceSigns = signs.slice(0, config.practice.maxSignsPerSession).map((sign, index) => ({
+    id: sign.id,
+    name: sign.word,
+    instruction: sign.description,
+    xpReward: config.practice.xpPerSign,
+  }))
+
   const totalXP = practiceSigns.reduce((sum, sign) => sum + sign.xpReward, 0)
+
+  if (loading) {
+    return <PracticeLoadingScreen />
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">

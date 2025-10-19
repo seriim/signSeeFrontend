@@ -60,9 +60,11 @@ SignSee provides a comprehensive learning platform that combines:
 - **Frontend Framework:** React with TypeScript
 - **Styling:** TailwindCSS v4
 - **UI Components:** shadcn/ui
+- **Backend:** Supabase (Database, Auth, Real-time)
 - **AI/ML:** MediaPipe for hand tracking, TensorFlow.js for gesture recognition
 - **Routing:** Next.js App Router
 - **State Management:** React Hooks (useState, useEffect)
+- **Deployment:** Vercel
 
 ## Project Structure
 
@@ -86,7 +88,11 @@ signsee-app/
 │   └── quiz-card.tsx           # Quiz preview card
 ├── lib/
 │   ├── types.ts                # TypeScript definitions
-│   └── mock-data.ts            # Sample data
+│   ├── supabase.ts             # Supabase client configuration
+│   ├── api.ts                  # API service functions
+│   └── mock-data.ts            # Sample data (deprecated)
+├── hooks/
+│   └── use-api.ts              # Custom API hooks
 └── public/                     # Static assets
 \`\`\`
 
@@ -103,6 +109,62 @@ signsee-app/
 - Difficulty levels (Beginner, Intermediate, Advanced)
 - Lesson count and XP rewards
 - Continue learning suggestions
+
+### Lesson Player (`/learn/lesson/[id]`)
+
+## Quick Start
+
+1. **Clone the repository**:
+   ```bash
+   git clone <your-repo-url>
+   cd signsee-frontend
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**:
+   ```bash
+   cp .env.local.example .env.local
+   # Edit .env.local with your Supabase credentials
+   ```
+
+4. **Set up Supabase backend**:
+   - Follow the instructions in `BACKEND_INTEGRATION.md`
+   - Create the database schema
+   - Configure Row Level Security policies
+
+5. **Run the development server**:
+   ```bash
+   npm run dev
+   ```
+
+6. **Deploy to Vercel**:
+   - Follow the instructions in `VERCEL_DEPLOYMENT.md`
+   - Connect your GitHub repository to Vercel
+   - Set up environment variables in Vercel dashboard
+
+## Backend Integration
+
+This app uses Supabase as the backend service, providing:
+- **Database**: PostgreSQL with real-time subscriptions
+- **Authentication**: User management and session handling
+- **Storage**: File uploads for sign language videos
+- **Real-time**: Live updates for collaborative features
+
+See `BACKEND_INTEGRATION.md` for detailed setup instructions.
+
+## Deployment
+
+The app is optimized for deployment on Vercel:
+- **Static Generation**: Optimized for performance
+- **Edge Functions**: Serverless API routes
+- **CDN**: Global content delivery
+- **Analytics**: Built-in performance monitoring
+
+See `VERCEL_DEPLOYMENT.md` for deployment instructions.
 
 ### Lesson Player (`/learn/lesson/[id]`)
 - Multi-step lesson interface (Instruction, Practice, Quiz)

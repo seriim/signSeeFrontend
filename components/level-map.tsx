@@ -7,7 +7,7 @@ import { useState, useRef, useEffect } from "react";
 
 interface Module {
   id: number;
-  title: string;
+  name: string;
   description: string;
   lessons: number;
   completedLessons: number;
@@ -68,12 +68,22 @@ export function LevelMap({ modules, userStats }: LevelMapProps) {
 
   const getStatusColor = (status: string, difficulty: string) => {
     if (status === "completed") {
-      return `fill-secondary stroke-secondary/80 stroke-2 cursor-pointer`;
+      return `fill-green-500 stroke-green-600 stroke-2 cursor-pointer`;
     }
     if (status === "current") {
-      return `fill-primary stroke-primary/80 stroke-2 cursor-pointer`;
+      // Use difficulty-based colors for current levels
+      switch (difficulty) {
+        case "Beginner":
+          return `fill-green-500 stroke-green-600 stroke-2 cursor-pointer`;
+        case "Intermediate":
+          return `fill-blue-500 stroke-blue-600 stroke-2 cursor-pointer`;
+        case "Advanced":
+          return `fill-red-500 stroke-red-600 stroke-2 cursor-pointer`;
+        default:
+          return `fill-primary stroke-primary/80 stroke-2 cursor-pointer`;
+      }
     }
-    return `fill-muted stroke-muted/50 stroke-2 cursor-pointer`;
+    return `fill-gray-300 stroke-gray-400 stroke-2 cursor-pointer`;
   };
 
   const getPathColor = (fromStatus: string, toStatus: string) => {
@@ -435,7 +445,7 @@ export function LevelMap({ modules, userStats }: LevelMapProps) {
 
                   {/* Title */}
                   <h3 className="text-3xl font-bold text-gray-900 mb-3">
-                    {module.title}
+                    {module.name}
                   </h3>
 
                   {/* Description */}

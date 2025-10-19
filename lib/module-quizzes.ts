@@ -15,7 +15,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 1,
       question: "Which sign means 'Hello'?",
-      imageUrl: "/jsl-hello-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/jsl-hello-sign.jpg", label: "Hello" },
         { imageUrl: "/jsl-thank-you-sign.jpg", label: "Thank You" },
@@ -28,7 +28,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 2,
       question: "Which sign means 'Thank You'?",
-      imageUrl: "/jsl-thank-you-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/jsl-please-sign.jpg", label: "Please" },
         { imageUrl: "/jsl-thank-you-sign.jpg", label: "Thank You" },
@@ -41,7 +41,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 3,
       question: "Which sign means 'Please'?",
-      imageUrl: "/jsl-please-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/jsl-hello-sign.jpg", label: "Hello" },
         { imageUrl: "/person-signing-goodbye-in-sign-language.jpg", label: "Goodbye" },
@@ -54,7 +54,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 4,
       question: "Which sign means 'Goodbye'?",
-      imageUrl: "/person-signing-goodbye-in-sign-language.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/jsl-thank-you-sign.jpg", label: "Thank You" },
         { imageUrl: "/jsl-please-sign.jpg", label: "Please" },
@@ -95,7 +95,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 2,
       question: "Which hand shape represents the letter 'B'?",
-      imageUrl: "/jsl-hello-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "Closed fist" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Open hand" },
@@ -121,7 +121,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 4,
       question: "How do you sign the number '5'?",
-      imageUrl: "/jsl-hello-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "Closed fist" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "All fingers spread" },
@@ -134,7 +134,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 5,
       question: "Which hand shape represents the letter 'C'?",
-      imageUrl: "/jsl-thank-you-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "Closed fist" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Open hand" },
@@ -162,7 +162,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 2,
       question: "Which sign means 'What is your name?'",
-      imageUrl: "/jsl-hello-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "How are you?" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "What is your name?" },
@@ -175,7 +175,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 3,
       question: "Which sign means 'Nice to meet you'?",
-      imageUrl: "/jsl-thank-you-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "How are you?" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Hello" },
@@ -188,7 +188,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 4,
       question: "Which sign means 'Where are you from?'",
-      imageUrl: "/jsl-please-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "How are you?" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Hello" },
@@ -229,7 +229,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 2,
       question: "Which sign means 'I don't like it'?",
-      imageUrl: "/jsl-hello-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "I like it" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "I don't like it" },
@@ -242,7 +242,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 3,
       question: "Which sign means 'I'm happy'?",
-      imageUrl: "/jsl-thank-you-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "I'm sad" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "I'm confused" },
@@ -255,7 +255,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 4,
       question: "Which sign means 'I'm sad'?",
-      imageUrl: "/jsl-please-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "I'm sad" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "I'm happy" },
@@ -296,7 +296,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 2,
       question: "Which sign means 'Stop'?",
-      imageUrl: "/jsl-hello-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "Go" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Stop" },
@@ -309,7 +309,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 3,
       question: "Which sign means 'Go'?",
-      imageUrl: "/jsl-thank-you-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "Stop" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Wait" },
@@ -322,7 +322,7 @@ const moduleQuizzes: Record<number, ModuleQuizQuestion[]> = {
     {
       id: 4,
       question: "Which sign means 'Wait'?",
-      imageUrl: "/jsl-please-sign.jpg",
+      imageUrl: "/abstract-hand-gesture-pattern.jpg",
       options: [
         { imageUrl: "/abstract-hand-gesture-pattern.jpg", label: "Go" },
         { imageUrl: "/jsl-hello-sign.jpg", label: "Stop" },

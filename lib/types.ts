@@ -1,7 +1,22 @@
+export interface Module {
+  id: number
+  name: string
+  description: string
+  lessons: number
+  completedLessons: number
+  points: number
+  status: "completed" | "in-progress" | "locked"
+  difficulty: "Beginner" | "Intermediate" | "Advanced"
+  unlocked: boolean
+  position: { x: number; y: number }
+}
+
 export interface Lesson {
   id: string
-  title: string
+  name: string // matches database 'name' field
   description: string
+  moduleId: number // matches database 'moduleId' field
+  order: number // matches database 'order' field
   category: "basics" | "alphabet" | "numbers" | "phrases" | "conversation" | "emotions" | "commands" | "advanced"
   difficulty: "beginner" | "intermediate" | "advanced"
   duration: number // in minutes
@@ -10,6 +25,15 @@ export interface Lesson {
   locked: boolean
   xpReward: number
   content?: LessonContent[]
+}
+
+export interface Question {
+  id: number
+  lessonId: number
+  type: string | null
+  text: string | null
+  media: string | null
+  gesture: string | null // UUID
 }
 
 export interface LessonContent {

@@ -4,17 +4,32 @@ import { useRouter } from "next/navigation"
 import { PracticeSession } from "@/components/practice-session"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, Sparkles } from "lucide-react"
-
-const signs = [
-  { id: 1, sign: "Hello", description: "Wave your hand forward from your forehead", completed: false },
-  { id: 2, sign: "Thank You", description: "Touch your chin and move hand forward", completed: false },
-  { id: 3, sign: "Please", description: "Move your open hand in a small circle on your chest", completed: false },
-  { id: 4, sign: "Yes", description: "Nod your fist up and down", completed: false },
-  { id: 5, sign: "No", description: "Tap index and middle finger to thumb twice", completed: false },
-]
+import { useSigns } from "@/hooks/use-api"
+import { config } from "@/lib/config"
+import { PracticeLoadingScreen } from "@/components/ui/loading-screen"
+import { NetworkErrorScreen } from "@/components/ui/error-screen"
 
 export default function PracticeSessionPage() {
   const router = useRouter()
+  const { signs, loading, error } = useSigns()
+  
+  // For now, using a hardcoded user ID. In a real app, this would come from authentication
+  const userId = "demo-user-123"
+
+  if (loading) {
+    return <PracticeLoadingScreen />
+  }
+
+  if (error) {
+    return (
+      <NetworkErrorScreen 
+        onRetry={() => window.location.reload()}
+      />
+    )
+  }
+
+  // Use first N signs from the API based on config
+  const practiceSigns = signs.slice(0, config.practice.maxSignsPerSession)
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary/10 via-background to-primary/5">
@@ -34,7 +49,8 @@ export default function PracticeSessionPage() {
       {/* Main content */}
       <div className="container mx-auto px-3 py-4 max-w-6xl">
         <PracticeSession
-          signs={signs}
+          signs={practiceSigns}
+          userId={userId}
           layout="split"
           onComplete={() => router.push("/practice")}
         />

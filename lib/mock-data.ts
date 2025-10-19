@@ -1,5 +1,8 @@
 import type { Lesson, Sign, UserProgress, Badge } from "./types"
 
+// DEPRECATED: This file contains mock data that has been replaced by Supabase API calls
+// Keep this file for reference, but the app now uses real data from the backend
+
 export const mockSigns: Sign[] = [
   {
     id: "1",
@@ -34,8 +37,10 @@ export const mockSigns: Sign[] = [
 const module1Lessons: Lesson[] = [
   {
     id: "1-1",
-    title: "Basic Greetings",
+    name: "Basic Greetings",
     description: "Learn essential greeting signs to start conversations",
+    moduleId: 1,
+    order: 1,
     category: "basics",
     difficulty: "beginner",
     duration: 15,
@@ -72,12 +77,33 @@ const module1Lessons: Lesson[] = [
   },
   {
     id: "1-2",
-    title: "Polite Expressions",
+    name: "Polite Expressions",
     description: "Learn polite signs for respectful communication",
+    moduleId: 1,
+    order: 2,
     category: "basics",
     difficulty: "beginner",
     duration: 12,
-    signs: [],
+    signs: [
+      {
+        id: "please",
+        word: "Please",
+        category: "greetings",
+        videoUrl: "/jsl-please-sign.jpg",
+        thumbnailUrl: "/jsl-please-sign.jpg",
+        description: "Polite request gesture",
+        difficulty: "beginner",
+      },
+      {
+        id: "excuse-me",
+        word: "Excuse Me",
+        category: "greetings",
+        videoUrl: "/abstract-hand-gesture-pattern.jpg",
+        thumbnailUrl: "/abstract-hand-gesture-pattern.jpg",
+        description: "Polite attention-getting gesture",
+        difficulty: "beginner",
+      }
+    ],
     completed: false,
     locked: false,
     xpReward: 80,
@@ -110,12 +136,24 @@ const module1Lessons: Lesson[] = [
   },
   {
     id: "1-3",
-    title: "Goodbye & Farewell",
+    name: "Goodbye & Farewell",
     description: "Learn how to say goodbye in JSL",
+    moduleId: 1,
+    order: 3,
     category: "basics",
     difficulty: "beginner",
     duration: 10,
-    signs: [],
+    signs: [
+      {
+        id: "goodbye",
+        word: "Goodbye",
+        category: "greetings",
+        videoUrl: "/person-signing-goodbye-in-sign-language.jpg",
+        thumbnailUrl: "/person-signing-goodbye-in-sign-language.jpg",
+        description: "A farewell gesture",
+        difficulty: "beginner",
+      }
+    ],
     completed: false,
     locked: false,
     xpReward: 70,
@@ -138,14 +176,58 @@ const module1Lessons: Lesson[] = [
       },
     ],
   },
+  {
+    id: "1-4",
+    name: "Introduction to JSL",
+    description: "Get started with the basics of Jamaican Sign Language",
+    moduleId: 1,
+    order: 4,
+    category: "basics",
+    difficulty: "beginner",
+    duration: 8,
+    signs: [
+      {
+        id: "welcome",
+        word: "Welcome",
+        category: "greetings",
+        videoUrl: "/abstract-hand-gesture-pattern.jpg",
+        thumbnailUrl: "/abstract-hand-gesture-pattern.jpg",
+        description: "A welcoming gesture",
+        difficulty: "beginner",
+      }
+    ],
+    completed: false,
+    locked: false,
+    xpReward: 50,
+    content: [
+      {
+        id: "1-4-1",
+        type: "instruction",
+        title: "Welcome to JSL",
+        description: "Jamaican Sign Language (JSL) is the primary sign language used in Jamaica. It's a beautiful and expressive way to communicate.",
+        videoUrl: "/abstract-hand-gesture-pattern.jpg",
+        tip: "Take your time to learn each sign properly",
+      },
+      {
+        id: "1-4-2",
+        type: "instruction",
+        title: "Welcome Sign",
+        description: "To sign 'Welcome', open your arms wide in a welcoming gesture, palms facing up.",
+        videoUrl: "/abstract-hand-gesture-pattern.jpg",
+        tip: "This gesture shows hospitality and friendliness",
+      },
+    ],
+  },
 ]
 
 // Module 2: Alphabet & Numbers
 const module2Lessons: Lesson[] = [
   {
     id: "2-1",
-    title: "JSL Alphabet A-F",
+    name: "JSL Alphabet A-F",
     description: "Learn the first six letters of the JSL alphabet",
+    moduleId: 2,
+    order: 1,
     category: "alphabet",
     difficulty: "beginner",
     duration: 20,
@@ -174,9 +256,11 @@ const module2Lessons: Lesson[] = [
   },
   {
     id: "2-2",
-    title: "JSL Alphabet G-L",
+    name: "JSL Alphabet G-L",
     description: "Continue with letters G through L",
-    category: "alphabet",
+   
+    moduleId: 2,
+    order: 2, category: "alphabet",
     difficulty: "beginner",
     duration: 18,
     signs: [],
@@ -204,9 +288,11 @@ const module2Lessons: Lesson[] = [
   },
   {
     id: "2-3",
-    title: "Numbers 1-10",
+    name: "Numbers 1-10",
     description: "Learn to sign numbers from 1 to 10",
-    category: "numbers",
+   
+    moduleId: 2,
+    order: 3, category: "numbers",
     difficulty: "beginner",
     duration: 15,
     signs: [],
@@ -238,9 +324,11 @@ const module2Lessons: Lesson[] = [
 const module3Lessons: Lesson[] = [
   {
     id: "3-1",
-    title: "How are you?",
+    name: "How are you?",
     description: "Learn to ask 'How are you?' in JSL",
-    category: "phrases",
+   
+    moduleId: 3,
+    order: 1, category: "phrases",
     difficulty: "intermediate",
     duration: 12,
     signs: [],
@@ -268,9 +356,11 @@ const module3Lessons: Lesson[] = [
   },
   {
     id: "3-2",
-    title: "What is your name?",
+    name: "What is your name?",
     description: "Learn to ask for someone's name",
-    category: "phrases",
+   
+    moduleId: 3,
+    order: 2, category: "phrases",
     difficulty: "intermediate",
     duration: 10,
     signs: [],
@@ -302,9 +392,11 @@ const module3Lessons: Lesson[] = [
 const module4Lessons: Lesson[] = [
   {
     id: "4-1",
-    title: "Happy & Sad",
+    name: "Happy & Sad",
     description: "Learn to express emotions",
-    category: "emotions",
+   
+    moduleId: 4,
+    order: 1, category: "emotions",
     difficulty: "intermediate",
     duration: 14,
     signs: [],
@@ -340,9 +432,11 @@ const module4Lessons: Lesson[] = [
   },
   {
     id: "4-2",
-    title: "Tired & Excited",
+    name: "Tired & Excited",
     description: "Learn more emotion signs",
-    category: "emotions",
+   
+    moduleId: 4,
+    order: 2, category: "emotions",
     difficulty: "intermediate",
     duration: 12,
     signs: [],
@@ -382,9 +476,11 @@ const module4Lessons: Lesson[] = [
 const module5Lessons: Lesson[] = [
   {
     id: "5-1",
-    title: "Stop, Go, Wait",
+    name: "Stop, Go, Wait",
     description: "Learn directional commands",
-    category: "commands",
+   
+    moduleId: 5,
+    order: 1, category: "commands",
     difficulty: "intermediate",
     duration: 15,
     signs: [],
@@ -420,9 +516,11 @@ const module5Lessons: Lesson[] = [
   },
   {
     id: "5-2",
-    title: "Help & Come",
+    name: "Help & Come",
     description: "Learn helpful action signs",
-    category: "commands",
+   
+    moduleId: 5,
+    order: 2, category: "commands",
     difficulty: "intermediate",
     duration: 13,
     signs: [],
@@ -462,9 +560,11 @@ const module5Lessons: Lesson[] = [
 const module6Lessons: Lesson[] = [
   {
     id: "6-1",
-    title: "Agreement & Understanding",
+    name: "Agreement & Understanding",
     description: "Learn to express agreement and comprehension",
-    category: "advanced",
+   
+    moduleId: 6,
+    order: 1, category: "advanced",
     difficulty: "advanced",
     duration: 16,
     signs: [],
@@ -500,9 +600,11 @@ const module6Lessons: Lesson[] = [
   },
   {
     id: "6-2",
-    title: "Disagreement & Confusion",
+    name: "Disagreement & Confusion",
     description: "Learn to express disagreement and confusion",
-    category: "advanced",
+   
+    moduleId: 6,
+    order: 2, category: "advanced",
     difficulty: "advanced",
     duration: 14,
     signs: [],

@@ -7,33 +7,55 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { GestureRecognition } from "@/components/gesture-recognition"
 import { Trophy, Star, ArrowRight, CheckCircle2 } from "lucide-react"
-
-interface PracticeSign {
-  id: number
-  sign: string
-  description: string
-  completed: boolean
-}
+import { useUserProgress } from "@/hooks/use-api"
+import { config } from "@/lib/config"
+import type { Sign } from "@/lib/types"
 
 interface PracticeSessionProps {
-  signs: PracticeSign[]
+  signs: Sign[]
+  userId: string
   onComplete?: () => void
   compact?: boolean
   layout?: "default" | "split"
 }
 
-export function PracticeSession({ signs, onComplete, compact = false, layout = "default" }: PracticeSessionProps) {
+export function PracticeSession({ signs, userId, onComplete, compact = false, layout = "default" }: PracticeSessionProps) {
   const [currentSignIndex, setCurrentSignIndex] = useState(0)
-  const [completedSigns, setCompletedSigns] = useState<number[]>([])
+  const [completedSigns, setCompletedSigns] = useState<string[]>([])
   const [totalPoints, setTotalPoints] = useState(0)
+  
+  const { progress: userProgress, updateProgress, markLessonCompleted, loading: progressLoading, error: progressError } = useUserProgress(userId)
 
   const currentSign = signs[currentSignIndex]
   const progress = (completedSigns.length / signs.length) * 100
 
+  // Handle errors gracefully
+  if (progressError) {
+    console.error('Progress error:', progressError)
+  }
+
   const handleSuccess = () => {
     if (!completedSigns.includes(currentSign.id)) {
       setCompletedSigns([...completedSigns, currentSign.id])
-      setTotalPoints(totalPoints + 50)
+      setTotalPoints(totalPoints + config.practice.xpPerSign)
+      
+      // Update user progress in the backend
+      if (userProgress) {
+        try {
+          updateProgress({
+            ...userProgress,
+            xp: (userProgress.xp || 0) + config.practice.xpPerSign,
+            stats: {
+              ...userProgress.stats,
+              totalSignsLearned: (userProgress.stats?.totalSignsLearned || 0) + 1,
+              totalPracticeTime: (userProgress.stats?.totalPracticeTime || 0) + 1
+            }
+          })
+        } catch (error) {
+          console.error('Failed to update progress:', error)
+          // Continue with the practice session even if progress update fails
+        }
+      }
     }
 
     if (currentSignIndex < signs.length - 1) {
@@ -58,12 +80,12 @@ export function PracticeSession({ signs, onComplete, compact = false, layout = "
   if (layout === "split") {
     return (
       <div className="grid gap-4 md:grid-cols-12">
-        {/* Left: current sign + camera */}
+        {/* Left: current sign + camera - following backend design */}
         <div className="md:col-span-8 space-y-4">
-          {/* Current Sign Info */}
+          {/* Current Sign Info - following backend design */}
           <Card className={compact ? "border border-primary/20 bg-gradient-to-br from-primary/10 to-accent/10 p-4" : "border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-accent/10 p-5"}>
             <div className="mb-1 flex items-center gap-2">
-              <h3 className={compact ? "text-xl font-bold" : "text-2xl font-bold"}>{currentSign.sign}</h3>
+              <h3 className={compact ? "text-xl font-bold" : "text-2xl font-bold"}>{currentSign.word}</h3>
               {completedSigns.includes(currentSign.id) && (
                 <CheckCircle2 className={compact ? "h-5 w-5 text-success" : "h-5 w-5 text-success"} />
               )}
@@ -71,13 +93,13 @@ export function PracticeSession({ signs, onComplete, compact = false, layout = "
             <p className={compact ? "text-sm text-muted-foreground" : "text-sm text-muted-foreground"}>{currentSign.description}</p>
           </Card>
 
-          {/* Gesture Recognition */}
-          <GestureRecognition targetSign={currentSign.sign} onSuccess={handleSuccess} onSkip={handleSkip} compact={compact} />
+          {/* Gesture Recognition - following backend design */}
+          <GestureRecognition targetSign={currentSign.word} userId={userId} onSuccess={handleSuccess} onSkip={handleSkip} compact={compact} />
         </div>
 
-        {/* Right: progress + sign list */}
+        {/* Right: progress + sign list - following backend design */}
         <div className="md:col-span-4 space-y-4">
-          {/* Progress/XP */}
+          {/* Progress/XP - following backend design */}
           <Card className={compact ? "border p-4" : "border p-5"}>
             <div className="mb-3 flex items-center justify-between">
               <div>
@@ -94,7 +116,7 @@ export function PracticeSession({ signs, onComplete, compact = false, layout = "
             <Progress value={progress} className={compact ? "h-2" : "h-2.5"} />
           </Card>
 
-          {/* Sign List */}
+          {/* Sign List - following backend design */}
           <Card className={compact ? "p-3" : "p-4"}>
             <h3 className={compact ? "mb-2 text-sm font-semibold" : "mb-3 text-sm font-semibold"}>Practice Signs</h3>
             <div className="grid gap-2">
@@ -121,13 +143,13 @@ export function PracticeSession({ signs, onComplete, compact = false, layout = "
                   >
                     {completedSigns.includes(sign.id) ? <CheckCircle2 className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} /> : index + 1}
                   </div>
-                  <span className={compact ? "text-xs font-medium" : "text-sm font-medium"}>{sign.sign}</span>
+                  <span className={compact ? "text-xs font-medium" : "text-sm font-medium"}>{sign.word}</span>
                 </button>
               ))}
             </div>
           </Card>
 
-          {/* Completion */}
+          {/* Completion - following backend design */}
           {completedSigns.length === signs.length && (
             <Card className={compact ? "border border-success bg-gradient-to-br from-success/10 to-success/5 p-4 text-center" : "border border-success bg-gradient-to-br from-success/10 to-success/5 p-5 text-center"}>
               <Trophy className={compact ? "mx-auto mb-2 h-10 w-10 text-success" : "mx-auto mb-3 h-12 w-12 text-success"} />
@@ -167,14 +189,14 @@ export function PracticeSession({ signs, onComplete, compact = false, layout = "
       {/* Current Sign Info */}
       <Card className={compact ? "border border-primary/20 bg-gradient-to-br from-primary/10 to-accent/10 p-4" : "border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-accent/10 p-6"}>
         <div className="mb-2 flex items-center gap-2">
-          <h3 className={compact ? "text-xl font-bold" : "text-3xl font-bold"}>{currentSign.sign}</h3>
+          <h3 className={compact ? "text-xl font-bold" : "text-3xl font-bold"}>{currentSign.word}</h3>
           {completedSigns.includes(currentSign.id) && <CheckCircle2 className={compact ? "h-5 w-5 text-success" : "h-6 w-6 text-success"} />}
         </div>
         <p className={compact ? "text-sm text-muted-foreground" : "text-muted-foreground"}>{currentSign.description}</p>
       </Card>
 
       {/* Gesture Recognition */}
-      <GestureRecognition targetSign={currentSign.sign} onSuccess={handleSuccess} onSkip={handleSkip} compact={compact} />
+      <GestureRecognition targetSign={currentSign.word} userId={userId} onSuccess={handleSuccess} onSkip={handleSkip} compact={compact} />
 
       {/* Sign List */}
       <Card className={compact ? "p-4" : "p-6"}>
@@ -202,7 +224,7 @@ export function PracticeSession({ signs, onComplete, compact = false, layout = "
               >
                 {completedSigns.includes(sign.id) ? <CheckCircle2 className={compact ? "h-3.5 w-3.5" : "h-4 w-4"} /> : index + 1}
               </div>
-              <span className={compact ? "text-xs font-medium" : "text-sm font-medium"}>{sign.sign}</span>
+              <span className={compact ? "text-xs font-medium" : "text-sm font-medium"}>{sign.word}</span>
             </div>
           ))}
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -17,42 +18,42 @@ import {
   Play,
   BookOpen,
 } from "lucide-react";
-import { getLessonsForModule } from "@/lib/mock-data";
-import { useProgress } from "@/hooks/use-progress";
+import { useLessonsByModule, useUserProgress } from "@/hooks/use-api";
+import { ProgressLoadingScreen } from "@/components/ui/loading-screen";
 import type { Lesson, LessonContent } from "@/lib/types";
 
 // Module metadata
 const moduleMetadata = {
   1: {
-    title: "JSL Basics",
+    name: "JSL Basics",
     description: "Learn the fundamentals of Jamaican Sign Language",
   },
   2: {
-    title: "Alphabet & Numbers",
+    name: "Alphabet & Numbers",
     description: "Master the JSL alphabet and number signs",
   },
   3: {
-    title: "Numbers 1-20",
+    name: "Numbers 1-20",
     description: "Learn to sign numbers from 1 to 20",
   },
   4: {
-    title: "Common Phrases",
+    name: "Common Phrases",
     description: "Everyday phrases for basic communication",
   },
 };
 
-export default function ModulePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function ModulePage() {
+  const params = useParams();
+  const id = params.id as string;
   const moduleId = Number.parseInt(id);
   const metadata = moduleMetadata[moduleId as keyof typeof moduleMetadata];
-  const { completeLesson, completeModule, progress, isLoaded } = useProgress();
-
-  // Get lessons for this module
-  const lessons = getLessonsForModule(moduleId);
+  
+  // For now, using a hardcoded user ID. In a real app, this would come from authentication
+  const userId = "demo-user-123";
+  const { progress, loading: progressLoading } = useUserProgress(userId);
+  const { lessons, loading: lessonsLoading } = useLessonsByModule(moduleId);
+  
+  const isLoaded = !progressLoading && !lessonsLoading;
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   const [currentContentIndex, setCurrentContentIndex] = useState(0);
@@ -61,20 +62,13 @@ export default function ModulePage({
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
-  // Get module progress from global state
-  const moduleProgress = progress.modules.find((m) => m.id === moduleId);
-  const isModuleCompleted = moduleProgress?.completed || false;
+  // Get module progress from API data
+  const completedLessonIds = progress?.completedLessons || [];
+  const isModuleCompleted = lessons.every(lesson => completedLessonIds.includes(lesson.id));
 
   // Show loading state while progress is being loaded
   if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your progress...</p>
-        </div>
-      </div>
-    );
+    return <ProgressLoadingScreen />;
   }
 
   if (!metadata) {
@@ -112,8 +106,8 @@ export default function ModulePage({
       // Move to next lesson
       if (!completedLessons.includes(currentLesson.id)) {
         setCompletedLessons([...completedLessons, currentLesson.id]);
-        // Mark lesson as completed in global progress
-        completeLesson(moduleId, currentLesson.id, currentLesson.xpReward);
+        // Mark lesson as completed in API
+        // Note: In a real app, you'd call the API here to mark the lesson as completed
       }
       setCurrentLessonIndex(currentLessonIndex + 1);
       setCurrentContentIndex(0);
@@ -123,8 +117,8 @@ export default function ModulePage({
       // All lessons completed, mark current lesson as completed
       if (!completedLessons.includes(currentLesson.id)) {
         setCompletedLessons([...completedLessons, currentLesson.id]);
-        // Mark lesson as completed in global progress
-        completeLesson(moduleId, currentLesson.id, currentLesson.xpReward);
+        // Mark lesson as completed in API
+        // Note: In a real app, you'd call the API here to mark the lesson as completed
       }
       // Don't automatically show quiz - let user choose when to take it
     }
@@ -149,8 +143,8 @@ export default function ModulePage({
   };
 
   const handleModuleComplete = () => {
-    // Mark module as completed in global progress
-    completeModule(moduleId);
+    // Mark module as completed in API
+    // Note: In a real app, you'd call the API here to mark the module as completed
     // Navigate back to learn page to see updated progress
     window.location.href = "/learn";
   };
@@ -183,7 +177,7 @@ export default function ModulePage({
               <Trophy className="mx-auto mb-4 h-16 w-16 text-success" />
               <h2 className="mb-2 text-3xl font-bold">Module Complete! </h2>
               <p className="mb-6 text-lg text-muted-foreground">
-                You've completed all lessons in {metadata.title}
+                You've completed all lessons in {metadata.name}
               </p>
 
               <div className="mb-8 rounded-lg bg-white/50 p-6">
@@ -239,7 +233,7 @@ export default function ModulePage({
           {/* Progress Bar */}
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-medium">{currentLesson.title}</span>
+              <span className="font-medium">{currentLesson.name}</span>
               <span className="text-muted-foreground">
                 {currentContentIndex + 1} / {totalSteps}
               </span>
@@ -260,7 +254,7 @@ export default function ModulePage({
                   <h2 className="text-3xl font-bold mb-2">Module Complete!</h2>
                   <p className="text-lg text-muted-foreground mb-4">
                     Congratulations! You've completed all {lessons.length}{" "}
-                    lessons in {metadata.title}
+                    lessons in {metadata.name}
                   </p>
                   <div className="bg-accent/10 rounded-lg p-4 mb-6">
                     <p className="text-sm font-semibold text-accent mb-1">
@@ -488,7 +482,7 @@ export default function ModulePage({
                         />
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">{lesson.title}</p>
+                        <p className="font-medium truncate">{lesson.name}</p>
                         <p className="text-xs text-muted-foreground">
                           {lesson.duration} min
                         </p>

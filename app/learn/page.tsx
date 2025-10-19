@@ -6,8 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { LevelMap } from "@/components/level-map";
-import { getLessonsForModule } from "@/lib/mock-data";
-import { useProgress } from "@/hooks/use-progress";
+import { useLessonsByModule, useUserProgress } from "@/hooks/use-api";
+import { ProgressLoadingScreen } from "@/components/ui/loading-screen";
 import {
   BookOpen,
   Lock,
@@ -21,102 +21,108 @@ import {
 } from "lucide-react";
 
 export default function LearnPage() {
-  const { progress, isLoaded, getModuleStatus } = useProgress();
+  // For now, using a hardcoded user ID. In a real app, this would come from authentication
+  const userId = "demo-user-123";
+  const { progress, loading: progressLoading } = useUserProgress(userId);
+  
+  // Fetch lessons for each module
+  const { lessons: module1Lessons, loading: module1Loading } = useLessonsByModule(1);
+  const { lessons: module2Lessons, loading: module2Loading } = useLessonsByModule(2);
+  const { lessons: module3Lessons, loading: module3Loading } = useLessonsByModule(3);
+  const { lessons: module4Lessons, loading: module4Loading } = useLessonsByModule(4);
+  const { lessons: module5Lessons, loading: module5Loading } = useLessonsByModule(5);
+  const { lessons: module6Lessons, loading: module6Loading } = useLessonsByModule(6);
 
-  // Show loading state while progress is being loaded
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading your progress...</p>
-        </div>
-      </div>
-    );
+  const isLoading = progressLoading || module1Loading || module2Loading || module3Loading || module4Loading || module5Loading || module6Loading;
+
+  // Show loading state while data is being loaded
+  if (isLoading) {
+    return <ProgressLoadingScreen />;
   }
 
-  // Generate modules data from progress
+
+  // Generate modules data from API data
   const modules = [
     {
       id: 1,
-      title: "JSL Basics",
+      name: "JSL Basics",
       description: "Learn the fundamentals of Jamaican Sign Language",
-      lessons: getLessonsForModule(1).length,
-      completedLessons: progress.modules[0]?.completedLessons || 0,
-      points: progress.modules[0]?.points || 0,
-      status: getModuleStatus(1),
+      lessons: module1Lessons.length,
+      completedLessons: module1Lessons.filter(lesson => lesson.completed).length,
+      points: module1Lessons.filter(lesson => lesson.completed).reduce((sum, lesson) => sum + lesson.xpReward, 0),
+      status: (module1Lessons.length > 0 ? "in-progress" : "in-progress") as "completed" | "in-progress" | "locked",
       difficulty: "Beginner" as const,
-      unlocked: progress.modules[0]?.unlocked || false,
+      unlocked: true, // Level 1 is always unlocked
       position: { x: 100, y: 200 },
     },
     {
       id: 2,
-      title: "Alphabet & Numbers",
+      name: "Alphabet & Numbers",
       description: "Master the JSL alphabet and number signs",
-      lessons: getLessonsForModule(2).length,
-      completedLessons: progress.modules[1]?.completedLessons || 0,
-      points: progress.modules[1]?.points || 0,
-      status: getModuleStatus(2),
+      lessons: module2Lessons.length,
+      completedLessons: module2Lessons.filter(lesson => lesson.completed).length,
+      points: module2Lessons.filter(lesson => lesson.completed).reduce((sum, lesson) => sum + lesson.xpReward, 0),
+      status: (module2Lessons.length > 0 ? "in-progress" : "locked") as "completed" | "in-progress" | "locked",
       difficulty: "Beginner" as const,
-      unlocked: progress.modules[1]?.unlocked || false,
+      unlocked: true, // Level 2 is always unlocked
       position: { x: 300, y: 160 },
     },
     {
       id: 3,
-      title: "Common Phrases",
+      name: "Common Phrases",
       description: "Essential everyday phrases and greetings",
-      lessons: getLessonsForModule(3).length,
-      completedLessons: progress.modules[2]?.completedLessons || 0,
-      points: progress.modules[2]?.points || 0,
-      status: getModuleStatus(3),
+      lessons: module3Lessons.length,
+      completedLessons: module3Lessons.filter(lesson => lesson.completed).length,
+      points: module3Lessons.filter(lesson => lesson.completed).reduce((sum, lesson) => sum + lesson.xpReward, 0),
+      status: "locked" as "completed" | "in-progress" | "locked",
       difficulty: "Intermediate" as const,
-      unlocked: progress.modules[2]?.unlocked || false,
+      unlocked: false, // Level 3 is locked
       position: { x: 500, y: 200 },
     },
     {
       id: 4,
-      title: "Emotions & Feelings",
+      name: "Emotions & Feelings",
       description: "Express emotions and feelings in JSL",
-      lessons: getLessonsForModule(4).length,
-      completedLessons: progress.modules[3]?.completedLessons || 0,
-      points: progress.modules[3]?.points || 0,
-      status: getModuleStatus(4),
+      lessons: module4Lessons.length,
+      completedLessons: module4Lessons.filter(lesson => lesson.completed).length,
+      points: module4Lessons.filter(lesson => lesson.completed).reduce((sum, lesson) => sum + lesson.xpReward, 0),
+      status: "locked" as "completed" | "in-progress" | "locked",
       difficulty: "Intermediate" as const,
-      unlocked: progress.modules[3]?.unlocked || false,
+      unlocked: false, // Level 4 is locked
       position: { x: 700, y: 160 },
     },
     {
       id: 5,
-      title: "Commands & Actions",
+      name: "Commands & Actions",
       description: "Learn directional commands and action signs",
-      lessons: getLessonsForModule(5).length,
-      completedLessons: progress.modules[4]?.completedLessons || 0,
-      points: progress.modules[4]?.points || 0,
-      status: getModuleStatus(5),
+      lessons: module5Lessons.length,
+      completedLessons: module5Lessons.filter(lesson => lesson.completed).length,
+      points: module5Lessons.filter(lesson => lesson.completed).reduce((sum, lesson) => sum + lesson.xpReward, 0),
+      status: "locked" as "completed" | "in-progress" | "locked",
       difficulty: "Intermediate" as const,
-      unlocked: progress.modules[4]?.unlocked || false,
+      unlocked: false, // Level 5 is locked
       position: { x: 900, y: 200 },
     },
     {
       id: 6,
-      title: "Advanced Conversations",
+      name: "Advanced Conversations",
       description: "Master advanced conversational JSL",
-      lessons: getLessonsForModule(6).length,
-      completedLessons: progress.modules[5]?.completedLessons || 0,
-      points: progress.modules[5]?.points || 0,
-      status: getModuleStatus(6),
+      lessons: module6Lessons.length,
+      completedLessons: module6Lessons.filter(lesson => lesson.completed).length,
+      points: module6Lessons.filter(lesson => lesson.completed).reduce((sum, lesson) => sum + lesson.xpReward, 0),
+      status: "locked" as "completed" | "in-progress" | "locked",
       difficulty: "Advanced" as const,
-      unlocked: progress.modules[5]?.unlocked || false,
+      unlocked: false, // Level 6 is locked
       position: { x: 1100, y: 160 },
     },
   ];
 
   const userStats = {
-    totalPoints: progress.totalXP,
-    currentStreak: progress.currentStreak,
-    level: progress.level,
-    nextLevelPoints: 100,
-    badges: progress.badges,
+    totalPoints: progress?.xp || 0,
+    currentStreak: progress?.streak || 0,
+    level: progress?.level || 1,
+    nextLevelPoints: progress?.xpToNextLevel || 100,
+    badges: progress?.badges?.length || 0,
   };
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">

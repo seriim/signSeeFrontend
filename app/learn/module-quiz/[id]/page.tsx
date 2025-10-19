@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, use } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -9,8 +9,9 @@ import { Progress } from "@/components/ui/progress"
 import { Target, Trophy, Clock, CheckCircle2, XCircle, ArrowRight, Home } from "lucide-react"
 import { getModuleQuiz } from "@/lib/module-quizzes"
 
-export default function ModuleQuizPage({ params }: { params: { id: string } }) {
-  const moduleId = Number.parseInt(params.id)
+export default function ModuleQuizPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const moduleId = Number.parseInt(id)
   const quizQuestions = getModuleQuiz(moduleId)
 
   const [currentQuestion, setCurrentQuestion] = useState(0)

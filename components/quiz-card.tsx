@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Brain, Clock, Trophy, ArrowRight } from "lucide-react"
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Brain, Clock, Trophy, ArrowRight } from "lucide-react";
 
 interface QuizCardProps {
-  id: string
-  title: string
-  description: string
-  questions: number
-  duration: number
-  difficulty: "beginner" | "intermediate" | "advanced"
-  xpReward: number
-  completed?: boolean
-  score?: number
+  id: string;
+  title: string;
+  description: string;
+  questions: number;
+  duration: number;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  xpReward: number;
+  completed?: boolean;
+  score?: number;
 }
 
 export function QuizCard({
@@ -33,7 +33,7 @@ export function QuizCard({
     beginner: "bg-accent/20 text-accent",
     intermediate: "bg-primary/20 text-primary",
     advanced: "bg-secondary/20 text-secondary",
-  }
+  };
 
   return (
     <Card className="group overflow-hidden border-2 transition-all hover:border-primary hover:shadow-lg">
@@ -79,5 +79,5 @@ export function QuizCard({
         </Link>
       </div>
     </Card>
-  )
+  );
 }

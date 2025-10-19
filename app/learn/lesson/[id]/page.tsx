@@ -338,7 +338,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
                 }
               >
                 Next
-                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             )}
           </div>

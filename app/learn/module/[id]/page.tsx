@@ -446,7 +446,6 @@ export default function ModulePage({ params }: { params: { id: string } }) {
                   currentContentIndex === totalSteps - 1
                     ? "Complete Module"
                     : "Next"}
-                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
             )}

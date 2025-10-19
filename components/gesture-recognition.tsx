@@ -10,9 +10,10 @@ interface GestureRecognitionProps {
   targetSign: string
   onSuccess?: () => void
   onSkip?: () => void
+  compact?: boolean
 }
 
-export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRecognitionProps) {
+export function GestureRecognition({ targetSign, onSuccess, onSkip, compact = false }: GestureRecognitionProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isActive, setIsActive] = useState(false)
@@ -105,28 +106,28 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
   }
 
   return (
-    <Card className="overflow-hidden border-2">
+    <Card className={compact ? "overflow-hidden border" : "overflow-hidden border-2"}>
       {/* Camera View */}
-      <div className="relative aspect-video bg-muted">
+      <div className={compact ? "relative bg-muted aspect-[4/3]" : "relative aspect-video bg-muted"}>
         {!isActive ? (
-          <div className="flex h-full flex-col items-center justify-center gap-4 p-8 text-center">
-            <Camera className="h-16 w-16 text-muted-foreground" />
+          <div className={compact ? "flex h-full flex-col items-center justify-center gap-3 p-6 text-center" : "flex h-full flex-col items-center justify-center gap-4 p-8 text-center"}>
+            <Camera className={compact ? "h-10 w-10 text-muted-foreground" : "h-16 w-16 text-muted-foreground"} />
             <div>
-              <h3 className="mb-2 text-xl font-semibold">Practice with AI Recognition</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className={compact ? "mb-1 text-base font-semibold" : "mb-2 text-xl font-semibold"}>Practice with AI Recognition</h3>
+              <p className={compact ? "text-xs text-muted-foreground" : "text-sm text-muted-foreground"}>
                 Use your webcam to practice signing "{targetSign}". Our AI will verify your gesture in real-time.
               </p>
             </div>
-            <Button size="lg" onClick={startCamera} disabled={isLoading}>
+            <Button size={compact ? "sm" : "lg"} onClick={startCamera} disabled={isLoading}>
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Starting Camera...
+                  <Loader2 className={compact ? "mr-2 h-4 w-4 animate-spin" : "mr-2 h-5 w-5 animate-spin"} />
+                  {compact ? "Starting..." : "Starting Camera..."}
                 </>
               ) : (
                 <>
-                  <Camera className="mr-2 h-5 w-5" />
-                  Start Practice
+                  <Camera className={compact ? "mr-2 h-4 w-4" : "mr-2 h-5 w-5"} />
+                  {compact ? "Start" : "Start Practice"}
                 </>
               )}
             </Button>
@@ -148,32 +149,32 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
 
             {/* Detection Overlay */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="rounded-lg border-4 border-dashed border-primary/50 p-32" />
+              <div className={compact ? "rounded-lg border-2 border-dashed border-primary/50 p-16" : "rounded-lg border-4 border-dashed border-primary/50 p-32"} />
             </div>
 
             {/* Status Badge */}
-            <div className="absolute right-4 top-4">
+            <div className={compact ? "absolute right-3 top-3" : "absolute right-4 top-4"}>
               <Badge
                 variant={
                   detectionStatus === "success" ? "default" : detectionStatus === "error" ? "destructive" : "secondary"
                 }
-                className="text-sm"
+                className={compact ? "text-[11px] py-0.5" : "text-sm"}
               >
                 {detectionStatus === "detecting" && (
                   <>
-                    <Hand className="mr-1 h-3 w-3 animate-pulse" />
+                    <Hand className={compact ? "mr-1 h-3 w-3 animate-pulse" : "mr-1 h-3 w-3 animate-pulse"} />
                     Detecting...
                   </>
                 )}
                 {detectionStatus === "success" && (
                   <>
-                    <CheckCircle2 className="mr-1 h-3 w-3" />
+                    <CheckCircle2 className={compact ? "mr-1 h-3 w-3" : "mr-1 h-3 w-3"} />
                     Success!
                   </>
                 )}
                 {detectionStatus === "error" && (
                   <>
-                    <XCircle className="mr-1 h-3 w-3" />
+                    <XCircle className={compact ? "mr-1 h-3 w-3" : "mr-1 h-3 w-3"} />
                     Error
                   </>
                 )}
@@ -181,9 +182,9 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
             </div>
 
             {/* Stop Button */}
-            <div className="absolute left-4 top-4">
-              <Button variant="destructive" size="sm" onClick={stopCamera}>
-                <CameraOff className="mr-2 h-4 w-4" />
+            <div className={compact ? "absolute left-3 top-3" : "absolute left-4 top-4"}>
+              <Button variant="destructive" size={compact ? "xs" : "sm"} onClick={stopCamera}>
+                <CameraOff className={compact ? "mr-2 h-3.5 w-3.5" : "mr-2 h-4 w-4"} />
                 Stop
               </Button>
             </div>
@@ -193,13 +194,13 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
 
       {/* Feedback Section */}
       {isActive && (
-        <div className="border-t p-6">
+        <div className={compact ? "border-t p-4" : "border-t p-6"}>
           <div className="mb-4">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-sm font-medium">Confidence</span>
-              <span className="text-sm font-semibold text-primary">{confidence}%</span>
+              <span className={compact ? "text-xs font-medium" : "text-sm font-medium"}>Confidence</span>
+              <span className={compact ? "text-xs font-semibold text-primary" : "text-sm font-semibold text-primary"}>{confidence}%</span>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-muted">
+            <div className={compact ? "h-1.5 overflow-hidden rounded-full bg-muted" : "h-2 overflow-hidden rounded-full bg-muted"}>
               <div
                 className={`h-full transition-all duration-300 ${
                   confidence > 85
@@ -216,7 +217,7 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
           </div>
 
           <div
-            className={`rounded-lg border-l-4 p-4 ${
+            className={`rounded-lg ${compact ? "border-l-2 p-3" : "border-l-4 p-4"} ${
               detectionStatus === "success"
                 ? "border-l-success bg-success/5"
                 : detectionStatus === "error"
@@ -224,16 +225,16 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
                   : "border-l-accent bg-accent/5"
             }`}
           >
-            <p className="text-sm font-medium">{feedback}</p>
+            <p className={compact ? "text-xs font-medium" : "text-sm font-medium"}>{feedback}</p>
           </div>
 
           {detectionStatus !== "success" && (
-            <div className="mt-4 flex gap-2">
-              <Button variant="outline" onClick={stopCamera} className="flex-1 bg-transparent">
+            <div className={compact ? "mt-3 flex gap-2" : "mt-4 flex gap-2"}>
+              <Button variant="outline" onClick={stopCamera} className="flex-1 bg-transparent" size={compact ? "sm" : "default"}>
                 Try Again
               </Button>
               {onSkip && (
-                <Button variant="ghost" onClick={onSkip} className="flex-1">
+                <Button variant="ghost" onClick={onSkip} className="flex-1" size={compact ? "sm" : "default"}>
                   Skip for Now
                 </Button>
               )}
@@ -244,8 +245,8 @@ export function GestureRecognition({ targetSign, onSuccess, onSkip }: GestureRec
 
       {/* Info Footer */}
       {!isActive && (
-        <div className="border-t bg-muted/30 p-4">
-          <p className="text-center text-xs text-muted-foreground">
+        <div className={compact ? "border-t bg-muted/30 p-3" : "border-t bg-muted/30 p-4"}>
+          <p className={compact ? "text-center text-[11px] text-muted-foreground" : "text-center text-xs text-muted-foreground"}>
             AI-powered gesture recognition using MediaPipe technology. Your video is processed locally and never stored.
           </p>
         </div>

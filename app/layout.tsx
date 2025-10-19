@@ -1,6 +1,6 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Poppins, Comfortaa } from "next/font/google";
+import { Poppins, Comfortaa, DM_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -14,6 +14,12 @@ const poppins = Poppins({
 const comfortaa = Comfortaa({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${comfortaa.variable} font-sans antialiased`}
+        className={`${poppins.variable} ${comfortaa.variable} ${dmSans.variable} font-sans antialiased`}
       >
         {children}
         <Analytics />

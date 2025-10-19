@@ -2,8 +2,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+
 import {
   Sparkles,
+  BookOpen,
   Brain,
   Video,
   Trophy,
@@ -16,6 +18,12 @@ import {
 } from "lucide-react";
 
 export default function HomePage() {
+  const links = [
+    { href: "/learn", label: "Learn", icon: BookOpen },
+    { href: "/translator", label: "Translator", icon: Video },
+    { href: "/practice", label: "Practice", icon: Hand },
+    { href: "/dashboard", label: "Dashboard", icon: Trophy },
+  ];
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -60,21 +68,6 @@ export default function HomePage() {
               >
                 <Link href="/translator">Try Translator</Link>
               </Button>
-            </div>
-
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" />
-                <span>All Learners</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-secondary" />
-                <span>50+ Lessons</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4 text-accent" />
-                <span>AI-Powered</span>
-              </div>
             </div>
           </div>
         </div>
@@ -185,16 +178,33 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t bg-muted/30 py-12">
+      <footer className="border-t py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-2">
               <img className="w-[100px]" src="/logo.png" alt="logo" />
               <span className="text-xl font-bold">SignSee</span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Bridging communication one sign at a time
-            </p>
+            <div className="flex gap-5 justify-center text-sm text-muted-foreground text-center">
+              <ul className="text-sm text-muted-foreground text-center">
+                {links.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <li key={link.href}>
+                      <a
+                        href={link.href}
+                        className="flex items-center justify-center gap-2 underline"
+                      >
+                        <Icon className="w-4 h-4" />
+                        {link.label}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <p className="">Bridging communication one sign at a time.</p>
           </div>
         </div>
       </footer>

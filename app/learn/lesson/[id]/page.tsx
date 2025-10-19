@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { GestureRecognition } from "@/components/gesture-recognition"
 import { ArrowLeft, ArrowRight, CheckCircle2, Star, Trophy, Target, Sparkles } from "lucide-react"
 
 // Mock lesson content
@@ -73,7 +72,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
-  const [practiceCompleted, setPracticeCompleted] = useState(false)
 
   const step = lessonContent.steps[currentStep]
   const progress = ((currentStep + 1) / lessonContent.steps.length) * 100
@@ -83,7 +81,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
       setCurrentStep(currentStep + 1)
       setSelectedAnswer(null)
       setShowFeedback(false)
-      setPracticeCompleted(false)
     }
   }
 
@@ -92,7 +89,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
       setCurrentStep(currentStep - 1)
       setSelectedAnswer(null)
       setShowFeedback(false)
-      setPracticeCompleted(false)
     }
   }
 
@@ -104,13 +100,15 @@ export default function LessonPage({ params }: { params: { id: string } }) {
     }
   }
 
-  const handlePracticeSuccess = () => {
-    setPracticeCompleted(true)
-    setEarnedPoints(earnedPoints + 25)
-  }
 
   const handleComplete = () => {
     alert(`Lesson completed! You earned ${lessonContent.points + earnedPoints} XP!`)
+    // Navigate to next lesson or back to module
+    const currentLessonId = parseInt(params.id)
+    const nextLessonId = currentLessonId + 1
+    
+    // For now, go back to module 1, but in a real app this would be dynamic
+    window.location.href = `/learn/module/1`
   }
 
   return (
@@ -149,10 +147,9 @@ export default function LessonPage({ params }: { params: { id: string } }) {
             {/* Step Type Badge */}
             <div className="mb-4">
               <Badge
-                variant={step.type === "instruction" ? "default" : step.type === "practice" ? "secondary" : "outline"}
+                variant={step.type === "instruction" ? "default" : "outline"}
               >
                 {step.type === "instruction" && "Instruction"}
-                {step.type === "practice" && "Practice"}
                 {step.type === "quiz" && "Quiz"}
               </Badge>
             </div>
@@ -167,7 +164,7 @@ export default function LessonPage({ params }: { params: { id: string } }) {
 
                 {/* Video/Image Placeholder */}
                 <div className="mb-6 overflow-hidden rounded-lg bg-muted">
-                  <img src={step.videoUrl || "/placeholder.svg"} alt={step.title} className="h-auto w-full" />
+                  <img src={step.videoUrl || "/placeholder.svg"} alt={step.title} className="h-auto w-full object-contain" />
                 </div>
 
                 {/* Tip */}
@@ -185,30 +182,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
               </>
             )}
 
-            {/* Practice Step */}
-            {step.type === "practice" && (
-              <>
-                <p className="mb-6 text-lg text-muted-foreground">{step.content}</p>
-
-                <GestureRecognition
-                  targetSign={step.title.replace("Practice: ", "")}
-                  onSuccess={handlePracticeSuccess}
-                  onSkip={() => setPracticeCompleted(true)}
-                />
-
-                {practiceCompleted && (
-                  <Card className="mt-6 border-l-4 border-l-success bg-success/5 p-4">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="h-5 w-5 text-success" />
-                      <div>
-                        <p className="font-semibold text-success">Practice Complete!</p>
-                        <p className="text-sm text-muted-foreground">You earned 25 bonus XP</p>
-                      </div>
-                    </div>
-                  </Card>
-                )}
-              </>
-            )}
 
             {/* Quiz Step */}
             {step.type === "quiz" && (
@@ -276,17 +249,15 @@ export default function LessonPage({ params }: { params: { id: string } }) {
             </div>
 
             {currentStep === lessonContent.steps.length - 1 ? (
-              <Link href="/learn/module/1">
-                <Button size="lg" onClick={handleComplete}>
-                  <Trophy className="mr-2 h-5 w-5" />
-                  Complete Lesson
-                </Button>
-              </Link>
+              <Button size="lg" onClick={handleComplete}>
+                <Trophy className="mr-2 h-5 w-5" />
+                Complete Lesson
+              </Button>
             ) : (
               <Button
                 size="lg"
                 onClick={handleNext}
-                disabled={step.type === "practice" && !practiceCompleted && currentStep !== 0}
+                disabled={false}
               >
                 Next
                 <ArrowRight className="ml-2 h-5 w-5" />

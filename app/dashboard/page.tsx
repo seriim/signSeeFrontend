@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useProgress } from "@/hooks/use-progress"
 import {
   Target,
   Trophy,
@@ -19,6 +20,7 @@ import {
   Zap,
   CheckCircle2,
   Lock,
+  RotateCcw,
 } from "lucide-react"
 
 const userStats = {
@@ -115,28 +117,49 @@ const weeklyProgress = [
 
 export default function DashboardPage() {
   const [selectedTab, setSelectedTab] = useState("overview")
-  const levelProgress = (userStats.xp / userStats.xpToNextLevel) * 100
-  const lessonsProgress = (userStats.completedLessons / userStats.totalLessons) * 100
-  const quizzesProgress = (userStats.completedQuizzes / userStats.totalQuizzes) * 100
+  const { progress, isLoaded, resetProgress } = useProgress()
+
+  // Show loading state while progress is being loaded
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading your progress...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Update userStats with real progress data
+  const realUserStats = {
+    ...userStats,
+    level: progress.level,
+    xp: progress.totalXP,
+    streak: progress.currentStreak,
+    completedLessons: progress.modules.reduce((sum, module) => sum + module.completedLessons, 0),
+    badges: progress.badges,
+  }
+
+  const levelProgress = (realUserStats.xp / realUserStats.xpToNextLevel) * 100
+  const lessonsProgress = (realUserStats.completedLessons / realUserStats.totalLessons) * 100
+  const quizzesProgress = (realUserStats.completedQuizzes / realUserStats.totalQuizzes) * 100
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-secondary/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm">
+      <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
             <Target className="h-6 w-6 text-primary" />
-            SignSee
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
           </Link>
           <nav className="flex items-center gap-4">
             <Link href="/learn">
-              <Button variant="ghost">Learn</Button>
-            </Link>
-            <Link href="/practice">
-              <Button variant="ghost">Practice</Button>
+              <Button variant="ghost" className="rounded-full hover:bg-primary/10">Learn</Button>
             </Link>
             <Link href="/translator">
-              <Button variant="ghost">Translate</Button>
+              <Button variant="ghost" className="rounded-full hover:bg-primary/10">Translate</Button>
             </Link>
           </nav>
         </div>
@@ -144,48 +167,62 @@ export default function DashboardPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="mb-2 text-4xl font-bold">Welcome back, {userStats.name}!</h1>
-          <p className="text-lg text-muted-foreground">Track your progress and celebrate your achievements</p>
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h1 className="mb-1 text-3xl font-bold">Welcome back, {realUserStats.name}!</h1>
+            <p className="text-sm text-muted-foreground">Track your progress and celebrate your achievements</p>
+          </div>
+          <Button
+            onClick={() => {
+              resetProgress()
+              window.location.reload()
+            }}
+            variant="outline"
+            size="sm"
+            className="text-muted-foreground hover:text-destructive"
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Reset Progress
+          </Button>
         </div>
 
         {/* Stats Overview */}
-        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 p-6">
-            <div className="mb-2 flex items-center justify-between">
-              <Zap className="h-8 w-8 text-primary" />
-              <Badge variant="secondary">Level {userStats.level}</Badge>
+        <div className="mb-6 grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+            <div className="mb-1 flex items-center justify-between">
+              <Zap className="h-6 w-6 text-primary" />
+              <Badge variant="secondary" className="rounded-full text-xs">Level {realUserStats.level}</Badge>
             </div>
-            <p className="mb-1 text-3xl font-bold">{userStats.xp} XP</p>
-            <p className="mb-3 text-sm text-muted-foreground">{userStats.xpToNextLevel - userStats.xp} to next level</p>
-            <Progress value={levelProgress} className="h-2" />
+            <p className="mb-1 text-2xl font-bold">{realUserStats.xp} XP</p>
+            <p className="mb-2 text-xs text-muted-foreground">{realUserStats.xpToNextLevel - realUserStats.xp} to next level</p>
+            <Progress value={levelProgress} className="h-2 rounded-full" />
           </Card>
 
-          <Card className="border-2 border-accent/20 bg-gradient-to-br from-accent/10 to-accent/5 p-6">
-            <div className="mb-2 flex items-center justify-between">
-              <Flame className="h-8 w-8 text-accent" />
-              <Badge className="bg-accent/20 text-accent">Active</Badge>
+          <Card className="border-2 border-accent bg-gradient-to-b from-accent/15 to-accent/5 p-4 rounded-2xl">
+            <div className="mb-1 flex items-center justify-between">
+              <Flame className="h-6 w-6 text-accent" />
+              <Badge className="bg-accent/20 text-accent rounded-full text-xs">Active</Badge>
             </div>
-            <p className="mb-1 text-3xl font-bold">{userStats.streak} Days</p>
-            <p className="text-sm text-muted-foreground">Current streak</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.streak} Days</p>
+            <p className="text-xs text-muted-foreground">Current streak</p>
           </Card>
 
-          <Card className="border-2 border-secondary/20 bg-gradient-to-br from-secondary/10 to-secondary/5 p-6">
-            <div className="mb-2 flex items-center justify-between">
-              <BookOpen className="h-8 w-8 text-secondary" />
-              <Badge className="bg-secondary/20 text-secondary">Learning</Badge>
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+            <div className="mb-1 flex items-center justify-between">
+              <BookOpen className="h-6 w-6 text-primary" />
+              <Badge className="bg-primary/20 text-primary rounded-full text-xs">Learning</Badge>
             </div>
-            <p className="mb-1 text-3xl font-bold">{userStats.signsLearned}</p>
-            <p className="text-sm text-muted-foreground">Signs learned</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.signsLearned}</p>
+            <p className="text-xs text-muted-foreground">Signs learned</p>
           </Card>
 
-          <Card className="border-2 p-6">
-            <div className="mb-2 flex items-center justify-between">
-              <Trophy className="h-8 w-8 text-primary" />
-              <Badge variant="outline">{userStats.averageScore}%</Badge>
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+            <div className="mb-1 flex items-center justify-between">
+              <Trophy className="h-6 w-6 text-primary" />
+              <Badge variant="outline" className="rounded-full text-xs">{realUserStats.averageScore}%</Badge>
             </div>
-            <p className="mb-1 text-3xl font-bold">{userStats.completedQuizzes}</p>
-            <p className="text-sm text-muted-foreground">Quizzes completed</p>
+            <p className="mb-1 text-2xl font-bold">{realUserStats.completedQuizzes}</p>
+            <p className="text-xs text-muted-foreground">Quizzes completed</p>
           </Card>
         </div>
 
@@ -198,12 +235,12 @@ export default function DashboardPage() {
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid gap-6 lg:grid-cols-2">
+          <TabsContent value="overview" className="space-y-4">
+            <div className="grid gap-4 lg:grid-cols-2">
               {/* Learning Progress */}
-              <Card className="border-2 p-6">
-                <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
-                  <TrendingUp className="h-5 w-5 text-primary" />
+              <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+                <h3 className="mb-3 flex items-center gap-2 text-base font-bold">
+                  <TrendingUp className="h-4 w-4 text-primary" />
                   Learning Progress
                 </h3>
 
@@ -212,7 +249,7 @@ export default function DashboardPage() {
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="font-medium">Lessons Completed</span>
                       <span className="text-muted-foreground">
-                        {userStats.completedLessons}/{userStats.totalLessons}
+                        {realUserStats.completedLessons}/{realUserStats.totalLessons}
                       </span>
                     </div>
                     <Progress value={lessonsProgress} className="h-3" />
@@ -222,7 +259,7 @@ export default function DashboardPage() {
                     <div className="mb-2 flex items-center justify-between text-sm">
                       <span className="font-medium">Quizzes Completed</span>
                       <span className="text-muted-foreground">
-                        {userStats.completedQuizzes}/{userStats.totalQuizzes}
+                        {realUserStats.completedQuizzes}/{realUserStats.totalQuizzes}
                       </span>
                     </div>
                     <Progress value={quizzesProgress} className="h-3" />
@@ -232,7 +269,7 @@ export default function DashboardPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm text-muted-foreground">Total Practice Time</p>
-                        <p className="text-2xl font-bold">{userStats.totalPracticeTime} min</p>
+                        <p className="text-2xl font-bold">{realUserStats.totalPracticeTime} min</p>
                       </div>
                       <Calendar className="h-8 w-8 text-muted-foreground" />
                     </div>
@@ -241,9 +278,9 @@ export default function DashboardPage() {
               </Card>
 
               {/* Weekly Activity */}
-              <Card className="border-2 p-6">
-                <h3 className="mb-4 flex items-center gap-2 text-xl font-bold">
-                  <Calendar className="h-5 w-5 text-primary" />
+              <Card className="border-2 border-accent bg-gradient-to-b from-accent/15 to-accent/5 p-4 rounded-2xl">
+                <h3 className="mb-3 flex items-center gap-2 text-base font-bold">
+                  <Calendar className="h-4 w-4 text-primary" />
                   Weekly Activity
                 </h3>
 
@@ -279,27 +316,20 @@ export default function DashboardPage() {
             </div>
 
             {/* Quick Actions */}
-            <Card className="border-2 p-6">
-              <h3 className="mb-4 text-xl font-bold">Continue Learning</h3>
-              <div className="grid gap-4 md:grid-cols-3">
+            <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+              <h3 className="mb-3 text-base font-bold">Continue Learning</h3>
+              <div className="grid gap-3 md:grid-cols-3">
                 <Link href="/learn">
-                  <Button variant="outline" className="h-auto w-full flex-col gap-2 bg-transparent py-6">
-                    <BookOpen className="h-8 w-8 text-primary" />
-                    <span className="font-semibold">Resume Lessons</span>
+                  <Button variant="outline" className="h-auto w-full flex-col gap-1 bg-primary/15 border-2 border-primary rounded-2xl py-3">
+                    <BookOpen className="h-6 w-6 text-primary" />
+                    <span className="text-sm font-semibold">Resume Lessons</span>
                     <span className="text-xs text-muted-foreground">6 lessons remaining</span>
                   </Button>
                 </Link>
-                <Link href="/practice">
-                  <Button variant="outline" className="h-auto w-full flex-col gap-2 bg-transparent py-6">
-                    <Target className="h-8 w-8 text-accent" />
-                    <span className="font-semibold">Practice Signs</span>
-                    <span className="text-xs text-muted-foreground">Improve your skills</span>
-                  </Button>
-                </Link>
                 <Link href="/quiz">
-                  <Button variant="outline" className="h-auto w-full flex-col gap-2 bg-transparent py-6">
-                    <Trophy className="h-8 w-8 text-secondary" />
-                    <span className="font-semibold">Take Quiz</span>
+                  <Button variant="outline" className="h-auto w-full flex-col gap-1 bg-primary/15 border-2 border-primary rounded-2xl py-3">
+                    <Trophy className="h-6 w-6 text-primary" />
+                    <span className="text-sm font-semibold">Take Quiz</span>
                     <span className="text-xs text-muted-foreground">Test your knowledge</span>
                   </Button>
                 </Link>
@@ -308,25 +338,25 @@ export default function DashboardPage() {
           </TabsContent>
 
           {/* Achievements Tab */}
-          <TabsContent value="achievements" className="space-y-6">
-            <Card className="border-2 p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <h3 className="text-xl font-bold">Your Achievements</h3>
-                <Badge variant="secondary">
+          <TabsContent value="achievements" className="space-y-4">
+            <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-base font-bold">Your Achievements</h3>
+                <Badge variant="secondary" className="rounded-full text-xs">
                   {achievements.filter((a) => a.unlocked).length}/{achievements.length} Unlocked
                 </Badge>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-2">
                 {achievements.map((achievement) => {
                   const Icon = achievement.icon
                   return (
                     <Card
                       key={achievement.id}
-                      className={`border-2 p-6 ${
+                      className={`border-2 p-3 rounded-2xl ${
                         achievement.unlocked
-                          ? "border-accent/20 bg-gradient-to-br from-accent/10 to-accent/5"
-                          : "border-dashed opacity-60"
+                          ? "border-accent bg-gradient-to-b from-accent/15 to-accent/5"
+                          : "border-dashed opacity-60 rounded-2xl"
                       }`}
                     >
                       <div className="mb-4 flex items-start justify-between">
@@ -375,27 +405,27 @@ export default function DashboardPage() {
           </TabsContent>
 
           {/* Activity Tab */}
-          <TabsContent value="activity" className="space-y-6">
-            <Card className="border-2 p-6">
-              <h3 className="mb-6 text-xl font-bold">Recent Activity</h3>
+          <TabsContent value="activity" className="space-y-4">
+            <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
+              <h3 className="mb-4 text-base font-bold">Recent Activity</h3>
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {recentActivity.map((item, index) => (
-                  <div key={index} className="flex items-start gap-4 rounded-lg border p-4">
-                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/10">
-                      <Star className="h-5 w-5 text-primary" />
+                  <div key={index} className="flex items-start gap-3 rounded-2xl border-2 border-primary bg-primary/10 p-3">
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary/30">
+                      <Star className="h-4 w-4 text-primary" />
                     </div>
                     <div className="flex-1">
-                      <p className="mb-1 font-medium">{item.activity}</p>
-                      <p className="text-sm text-muted-foreground">{item.date}</p>
+                      <p className="mb-0.5 text-sm font-medium">{item.activity}</p>
+                      <p className="text-xs text-muted-foreground">{item.date}</p>
                     </div>
-                    <Badge variant="secondary">+{item.xp} XP</Badge>
+                    <Badge variant="secondary" className="rounded-full text-xs">+{item.xp} XP</Badge>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 text-center">
-                <Button variant="outline" className="bg-transparent">
+              <div className="mt-4 text-center">
+                <Button variant="outline" className="bg-primary/15 border-2 border-primary rounded-full text-sm">
                   Load More Activity
                 </Button>
               </div>

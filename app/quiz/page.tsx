@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -22,11 +22,10 @@ const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
     type: "multiple-choice",
-    question: "What does this JSL sign mean?",
+    question: "Which of the following is the correct JSL sign for 'Hello'?",
     options: ["Hello", "Goodbye", "Thank You", "Please"],
     correctAnswer: 0,
-    imageUrl: "/person-signing-hello-in-sign-language.jpg",
-    explanation: "This is the JSL sign for 'Hello' - raise your hand to your forehead and move it forward.",
+    explanation: "The JSL sign for 'Hello' is to raise your hand to your forehead and move it forward in a wave motion.",
   },
   {
     id: 2,
@@ -42,7 +41,6 @@ const quizQuestions: QuizQuestion[] = [
     question: "Which sign is used to express gratitude?",
     options: ["Sorry", "Thank You", "Please", "Help"],
     correctAnswer: 1,
-    imageUrl: "/person-signing-thank-you-in-sign-language.jpg",
     explanation: "Touch your chin with fingertips and move your hand forward to sign 'Thank You'.",
   },
   {
@@ -60,7 +58,33 @@ const quizQuestions: QuizQuestion[] = [
     correctAnswer: 1,
     explanation: "'Please' is a polite expression used to make requests courteously.",
   },
+  {
+    id: 6,
+    type: "multiple-choice",
+    question: "How do you sign 'Goodbye' in JSL?",
+    options: ["Wave hand forward", "Close fingers to palm", "Both hands up", "Point away"],
+    correctAnswer: 1,
+    explanation: "To sign 'Goodbye', hold your hand up with palm facing out, then close your fingers down toward your palm in a waving motion.",
+  },
+  {
+    id: 7,
+    type: "multiple-choice",
+    question: "What is the most important element when signing phrases?",
+    options: ["Hand speed", "Facial expressions", "Arm position", "All of the above"],
+    correctAnswer: 3,
+    explanation: "All elements are important - hand speed, facial expressions, and arm position all contribute to clear communication in JSL.",
+  },
 ]
+
+// Function to shuffle array
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
 
 export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -70,9 +94,22 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState<boolean[]>([])
   const [quizComplete, setQuizComplete] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState(0)
+  const [shuffledOptions, setShuffledOptions] = useState<string[]>([])
+  const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number>(0)
 
   const question = quizQuestions[currentQuestion]
   const progress = ((currentQuestion + 1) / quizQuestions.length) * 100
+
+  // Shuffle options when question changes
+  useEffect(() => {
+    if (question.options) {
+      const shuffled = shuffleArray(question.options)
+      setShuffledOptions(shuffled)
+      // Find the new index of the correct answer after shuffling
+      const correctAnswer = question.options[question.correctAnswer as number]
+      setCorrectAnswerIndex(shuffled.indexOf(correctAnswer))
+    }
+  }, [currentQuestion, question.options, question.correctAnswer])
 
   const handleAnswerSelect = (answerIndex: number) => {
     if (showResult) return
@@ -82,7 +119,7 @@ export default function QuizPage() {
   const handleSubmitAnswer = () => {
     if (selectedAnswer === null) return
 
-    const isCorrect = selectedAnswer === question.correctAnswer
+    const isCorrect = selectedAnswer === correctAnswerIndex
     setShowResult(true)
     setAnswers([...answers, isCorrect])
 
@@ -116,46 +153,46 @@ export default function QuizPage() {
     const passed = percentage >= 70
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-secondary/5">
-        <header className="border-b bg-background/80 backdrop-blur-sm">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
+        <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto flex items-center justify-between px-4 py-4">
-            <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+            <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
               <Target className="h-6 w-6 text-primary" />
-              SignSee
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
             </Link>
           </div>
         </header>
 
         <div className="container mx-auto px-4 py-12">
           <div className="mx-auto max-w-2xl">
-            <Card className="border-2 p-8 text-center">
+            <Card className="border-2 border-primary/40 bg-white/50 p-6 text-center rounded-2xl">
               <div
-                className={`mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full ${
+                className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
                   passed ? "bg-accent/20" : "bg-secondary/20"
                 }`}
               >
-                <Trophy className={`h-12 w-12 ${passed ? "text-accent" : "text-secondary"}`} />
+                <Trophy className={`h-8 w-8 ${passed ? "text-accent" : "text-secondary"}`} />
               </div>
 
-              <h1 className="mb-2 text-3xl font-bold">Quiz Complete!</h1>
-              <p className="mb-6 text-lg text-muted-foreground">
+              <h1 className="mb-1 text-2xl font-bold">Quiz Complete!</h1>
+              <p className="mb-4 text-sm text-muted-foreground">
                 {passed ? "Congratulations! You passed!" : "Keep practicing to improve your score!"}
               </p>
 
-              <div className="mb-8 grid gap-4 md:grid-cols-3">
-                <Card className="border-2 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">Score</p>
-                  <p className="text-3xl font-bold text-primary">
+              <div className="mb-4 grid gap-3 md:grid-cols-3">
+                <Card className="border-2 border-primary/40 bg-white/50 p-3 rounded-2xl">
+                  <p className="mb-0.5 text-xs text-muted-foreground">Score</p>
+                  <p className="text-2xl font-bold text-primary">
                     {score}/{quizQuestions.length}
                   </p>
                 </Card>
-                <Card className="border-2 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">Percentage</p>
-                  <p className="text-3xl font-bold text-accent">{percentage}%</p>
+                <Card className="border-2 border-accent bg-gradient-to-b from-accent/15 to-accent/5 p-3 rounded-2xl">
+                  <p className="mb-0.5 text-xs text-muted-foreground">Percentage</p>
+                  <p className="text-2xl font-bold text-accent">{percentage}%</p>
                 </Card>
-                <Card className="border-2 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">XP Earned</p>
-                  <p className="text-3xl font-bold text-secondary">+{score * 10}</p>
+                <Card className="border-2 border-primary/40 bg-white/50 p-3 rounded-2xl">
+                  <p className="mb-0.5 text-xs text-muted-foreground">XP Earned</p>
+                  <p className="text-2xl font-bold text-primary">+{score * 10}</p>
                 </Card>
               </div>
 
@@ -193,33 +230,33 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-secondary/5">
-      <header className="border-b bg-background/80 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
+      <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
             <Target className="h-6 w-6 text-primary" />
-            SignSee
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
           </Link>
-          <Badge variant="outline">
+          <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/10">
             <Clock className="mr-1 h-3 w-3" />
             Question {currentQuestion + 1}/{quizQuestions.length}
           </Badge>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         <div className="mx-auto max-w-3xl">
           {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="mb-2 flex items-center justify-between text-sm">
+          <div className="mb-4">
+            <div className="mb-1 flex items-center justify-between text-xs">
               <span className="font-medium">Quiz Progress</span>
               <span className="text-muted-foreground">{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-3" />
+            <Progress value={progress} className="h-2 rounded-full" />
           </div>
 
           {/* Question Card */}
-          <Card className="border-2 p-8">
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="mb-6">
               <Badge className="mb-4 bg-primary/10 text-primary">
                 {question.type === "multiple-choice"
@@ -243,9 +280,9 @@ export default function QuizPage() {
             )}
 
             {/* Answer Options */}
-            {question.type !== "gesture-recognition" && question.options && (
+            {question.type !== "gesture-recognition" && shuffledOptions.length > 0 && (
               <div className="mb-6 space-y-3">
-                {question.options.map((option, index) => (
+                {shuffledOptions.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
@@ -253,21 +290,21 @@ export default function QuizPage() {
                     className={`w-full rounded-lg border-2 p-4 text-left transition-all ${
                       selectedAnswer === index
                         ? showResult
-                          ? index === question.correctAnswer
+                          ? index === correctAnswerIndex
                             ? "border-accent bg-accent/20"
                             : "border-secondary bg-secondary/20"
                           : "border-primary bg-primary/10"
-                        : showResult && index === question.correctAnswer
+                        : showResult && index === correctAnswerIndex
                           ? "border-accent bg-accent/20"
                           : "border-border hover:border-primary"
                     } ${showResult ? "cursor-not-allowed" : "cursor-pointer"}`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{option}</span>
-                      {showResult && index === question.correctAnswer && (
+                      {showResult && index === correctAnswerIndex && (
                         <CheckCircle2 className="h-5 w-5 text-accent" />
                       )}
-                      {showResult && selectedAnswer === index && index !== question.correctAnswer && (
+                      {showResult && selectedAnswer === index && index !== correctAnswerIndex && (
                         <XCircle className="h-5 w-5 text-secondary" />
                       )}
                     </div>

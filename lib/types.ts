@@ -2,13 +2,27 @@ export interface Lesson {
   id: string
   title: string
   description: string
-  category: "basics" | "alphabet" | "numbers" | "phrases" | "conversation"
+  category: "basics" | "alphabet" | "numbers" | "phrases" | "conversation" | "emotions" | "commands" | "advanced"
   difficulty: "beginner" | "intermediate" | "advanced"
   duration: number // in minutes
   signs: Sign[]
   completed: boolean
   locked: boolean
   xpReward: number
+  content?: LessonContent[]
+}
+
+export interface LessonContent {
+  id: string
+  type: "instruction" | "quiz"
+  title: string
+  description?: string
+  videoUrl?: string
+  thumbnailUrl?: string
+  tip?: string
+  instruction?: string
+  options?: string[]
+  correctAnswer?: number
 }
 
 export interface Sign {

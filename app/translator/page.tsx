@@ -119,9 +119,6 @@ export default function TranslatorPage() {
             <Link href="/learn">
               <Button variant="ghost">Learn</Button>
             </Link>
-            <Link href="/practice">
-              <Button variant="ghost">Practice</Button>
-            </Link>
           </nav>
         </div>
       </header>

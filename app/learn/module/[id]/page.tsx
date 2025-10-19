@@ -71,7 +71,7 @@ export default function ModulePage() {
     return <ProgressLoadingScreen />;
   }
 
-  if (!metadata) {
+  if (!metadata || lessons.length === 0) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         <Card className="p-8 text-center">
@@ -85,7 +85,7 @@ export default function ModulePage() {
   }
 
   const currentLesson = lessons[currentLessonIndex];
-  const lessonContent = currentLesson.content || [];
+  const lessonContent = currentLesson?.content || [];
   const currentStep = lessonContent[currentContentIndex];
 
   const totalSteps = lessonContent.length;

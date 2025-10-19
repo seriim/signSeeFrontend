@@ -338,5 +338,3 @@ export default function LessonPage({ params }: { params: Promise<{ id: string }>
     </div>
   );
 }
-{
-}

@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
+import { LevelMap } from "@/components/level-map"
 import { BookOpen, Lock, CheckCircle2, Star, Trophy, Flame, Target, ArrowRight, Sparkles } from "lucide-react"
 
-// Mock data for learning modules
+// Mock data for learning modules with positions for level map
 const modules = [
   {
     id: 1,
@@ -17,6 +18,7 @@ const modules = [
     status: "completed",
     difficulty: "Beginner",
     unlocked: true,
+    position: { x: 100, y: 200 },
   },
   {
     id: 2,
@@ -28,6 +30,7 @@ const modules = [
     status: "in-progress",
     difficulty: "Beginner",
     unlocked: true,
+    position: { x: 300, y: 160 },
   },
   {
     id: 3,
@@ -39,6 +42,7 @@ const modules = [
     status: "locked",
     difficulty: "Intermediate",
     unlocked: false,
+    position: { x: 500, y: 200 },
   },
   {
     id: 4,
@@ -50,6 +54,7 @@ const modules = [
     status: "locked",
     difficulty: "Intermediate",
     unlocked: false,
+    position: { x: 600, y: 260 },
   },
   {
     id: 5,
@@ -61,6 +66,7 @@ const modules = [
     status: "locked",
     difficulty: "Intermediate",
     unlocked: false,
+    position: { x: 700, y: 200 },
   },
   {
     id: 6,
@@ -72,6 +78,7 @@ const modules = [
     status: "locked",
     difficulty: "Advanced",
     unlocked: false,
+    position: { x: 400, y: 320 },
   },
 ]
 
@@ -162,86 +169,8 @@ export default function LearnPage() {
           </p>
         </Card>
 
-        {/* Learning Modules */}
-        <div className="mb-6">
-          <h2 className="mb-2 text-3xl font-bold">Learning Path</h2>
-          <p className="text-muted-foreground">Progress through modules to master Jamaican Sign Language</p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {modules.map((module) => (
-            <Card
-              key={module.id}
-              className={`group relative overflow-hidden border-2 p-6 transition-all ${
-                module.unlocked ? "hover:border-primary hover:shadow-lg" : "cursor-not-allowed opacity-60"
-              }`}
-            >
-              {/* Status Badge */}
-              <div className="mb-4 flex items-center justify-between">
-                <Badge
-                  variant={
-                    module.difficulty === "Beginner"
-                      ? "default"
-                      : module.difficulty === "Intermediate"
-                        ? "secondary"
-                        : "outline"
-                  }
-                >
-                  {module.difficulty}
-                </Badge>
-                {module.status === "completed" && <CheckCircle2 className="h-6 w-6 text-success" />}
-                {module.status === "in-progress" && <div className="h-3 w-3 animate-pulse rounded-full bg-accent" />}
-                {module.status === "locked" && <Lock className="h-5 w-5 text-muted-foreground" />}
-              </div>
-
-              {/* Module Info */}
-              <h3 className="mb-2 text-xl font-bold">{module.title}</h3>
-              <p className="mb-4 text-sm text-muted-foreground">{module.description}</p>
-
-              {/* Progress */}
-              {module.unlocked && (
-                <>
-                  <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {module.completedLessons} / {module.lessons} lessons
-                    </span>
-                    <span className="font-semibold text-primary">{module.points} XP</span>
-                  </div>
-                  <Progress value={(module.completedLessons / module.lessons) * 100} className="mb-4 h-2" />
-                </>
-              )}
-
-              {/* Action Button */}
-              {module.unlocked ? (
-                <Link href={`/learn/module/${module.id}`}>
-                  <Button className="w-full" variant={module.status === "completed" ? "outline" : "default"}>
-                    {module.status === "completed" ? (
-                      <>
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        Review
-                      </>
-                    ) : module.status === "in-progress" ? (
-                      <>
-                        Continue Learning
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </>
-                    ) : (
-                      <>
-                        Start Module
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                </Link>
-              ) : (
-                <Button className="w-full" disabled>
-                  <Lock className="mr-2 h-4 w-4" />
-                  Complete previous modules
-                </Button>
-              )}
-            </Card>
-          ))}
-        </div>
+        {/* Level Map */}
+        <LevelMap modules={modules} userStats={userStats} />
       </div>
     </div>
   )

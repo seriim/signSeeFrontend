@@ -185,8 +185,9 @@ const moduleLessons = {
   },
 }
 
-export default function ModulePage({ params }: { params: { id: string } }) {
-  const moduleId = Number.parseInt(params.id)
+export default async function ModulePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const moduleId = Number.parseInt(id)
   const module = moduleLessons[moduleId as keyof typeof moduleLessons]
 
   if (!module) {

@@ -84,7 +84,6 @@ export default function ModuleQuizPage({
               href="/"
               className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105"
             >
-              <Target className="h-6 w-6 text-primary" />
               <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 SignSee
               </span>

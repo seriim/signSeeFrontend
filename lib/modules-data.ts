@@ -1,5 +1,4 @@
 import type { Lesson, LessonContent } from "./types"
-
 // Hardcoded modules data
 export const modulesData = {
   1: {
@@ -62,7 +61,7 @@ export const lessonsData: Lesson[] = [
         type: "instruction",
         title: "Hello",
         description: "To sign 'Hello' in JSL, raise your hand to your forehead with fingers together, then move it forward in a small wave motion.",
-        videoUrl: "/jsl-hello-sign.jpg",
+        videoUrl: "/videos/hello.mp4",
         tip: "Keep your movements smooth and natural. Smile while signing!",
       },
       {
@@ -70,7 +69,7 @@ export const lessonsData: Lesson[] = [
         type: "instruction",
         title: "Thank You",
         description: "Sign 'Thank You' by bringing your open hand from your chin downward and outward in a smooth motion.",
-        videoUrl: "/jsl-thank-you-sign.jpg",
+        videoUrl: "/videos/thankyou.mp4",
         tip: "This gesture shows gratitude and appreciation",
       },
       {
@@ -102,7 +101,7 @@ export const lessonsData: Lesson[] = [
         type: "instruction",
         title: "Please",
         description: "Make a circular motion on your chest with your open hand to sign 'Please'.",
-        videoUrl: "/jsl-please-sign.jpg",
+        videoUrl: "/videos/please.mp4",
         tip: "Use a gentle, respectful tone with your facial expression",
       },
       {
@@ -110,7 +109,7 @@ export const lessonsData: Lesson[] = [
         type: "instruction",
         title: "Excuse Me",
         description: "Gently tap your chest with your fingertips to sign 'Excuse Me'.",
-        videoUrl: "/abstract-hand-gesture-pattern.jpg",
+        videoUrl: "//videos/excuseme.mp4",
         tip: "This is used to get someone's attention politely",
       },
       {
@@ -142,7 +141,7 @@ export const lessonsData: Lesson[] = [
         type: "instruction",
         title: "Goodbye",
         description: "Hold your hand up with palm facing out, then close your fingers down toward your palm in a waving motion.",
-        videoUrl: "/person-signing-goodbye-in-sign-language.jpg",
+        videoUrl: "/videos/bye.mp4",
         tip: "This is similar to a regular wave goodbye, but more deliberate",
       },
       {
@@ -150,7 +149,7 @@ export const lessonsData: Lesson[] = [
         type: "instruction",
         title: "See You Later",
         description: "Point to your eye, then point forward with both hands in a sweeping motion.",
-        videoUrl: "/abstract-hand-gesture-pattern.jpg",
+        videoUrl: "/videos/seeyoulater.mp4",
         tip: "This sign conveys a casual, friendly goodbye",
       },
       {

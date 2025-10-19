@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -41,8 +41,13 @@ const moduleMetadata = {
   },
 };
 
-export default function ModulePage({ params }: { params: { id: string } }) {
-  const moduleId = Number.parseInt(params.id);
+export default function ModulePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const moduleId = Number.parseInt(id);
   const metadata = moduleMetadata[moduleId as keyof typeof moduleMetadata];
   const { completeLesson, completeModule, progress, isLoaded } = useProgress();
 
@@ -252,9 +257,7 @@ export default function ModulePage({ params }: { params: { id: string } }) {
               <Card className="border-2 p-8 max-w-2xl mx-auto text-center">
                 <div className="mb-6">
                   <Trophy className="h-16 w-16 text-accent mx-auto mb-4" />
-                  <h2 className="text-3xl font-bold mb-2">
-                    Module Complete! 🎉
-                  </h2>
+                  <h2 className="text-3xl font-bold mb-2">Module Complete!</h2>
                   <p className="text-lg text-muted-foreground mb-4">
                     Congratulations! You've completed all {lessons.length}{" "}
                     lessons in {metadata.title}
@@ -335,7 +338,6 @@ export default function ModulePage({ params }: { params: { id: string } }) {
                       {currentStep.tip && (
                         <Card className="border-l-4 border-l-accent bg-accent/5 p-4">
                           <div className="flex items-start gap-3">
-                            <Sparkles className="mt-1 h-4 w-4 flex-shrink-0 text-accent" />
                             <div>
                               <p className="text-sm font-semibold text-accent">
                                 Pro Tip

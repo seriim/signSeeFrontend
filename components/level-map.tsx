@@ -1,19 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  CheckCircle2,
-  Lock,
-  Star,
-  BookOpen,
-  ArrowRight,
-  Trophy,
-  Flame,
-  Target,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { CheckCircle2, Lock, BookOpen, Trophy } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 interface Module {

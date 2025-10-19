@@ -7,15 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { GestureRecognition } from "@/components/gesture-recognition";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  Star,
-  Trophy,
-  Target,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, CheckCircle2, Star, Trophy, Sparkles } from "lucide-react";
 
 // Mock lesson content
 const lessonContent = {
@@ -199,7 +191,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
                 {step.tip && (
                   <Card className="border-l-4 border-l-accent bg-accent/5 p-4">
                     <div className="flex items-start gap-3">
-                      <Sparkles className="mt-1 h-5 w-5 flex-shrink-0 text-accent" />
                       <div>
                         <p className="font-semibold text-accent">Pro Tip</p>
                         <p className="text-sm text-muted-foreground">
@@ -345,4 +336,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
       </div>
     </div>
   );
+}
+{
 }

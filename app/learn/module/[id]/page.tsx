@@ -47,12 +47,12 @@ export default function ModulePage() {
   const id = params.id as string;
   const moduleId = Number.parseInt(id);
   const metadata = moduleMetadata[moduleId as keyof typeof moduleMetadata];
-  
+
   // For now, using a hardcoded user ID. In a real app, this would come from authentication
   const userId = "demo-user-123";
   const { progress, loading: progressLoading } = useUserProgress(userId);
   const { lessons, loading: lessonsLoading } = useLessonsByModule(moduleId);
-  
+
   const isLoaded = !progressLoading && !lessonsLoading;
 
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
@@ -64,7 +64,9 @@ export default function ModulePage() {
 
   // Get module progress from API data
   const completedLessonIds = progress?.completedLessons || [];
-  const isModuleCompleted = lessons.every(lesson => completedLessonIds.includes(lesson.id));
+  const isModuleCompleted = lessons.every((lesson) =>
+    completedLessonIds.includes(lesson.id)
+  );
 
   // Show loading state while progress is being loaded
   if (!isLoaded) {
@@ -321,11 +323,22 @@ export default function ModulePage() {
 
                       {/* Video/Image */}
                       <div className="overflow-hidden rounded-xl bg-muted shadow-sm">
-                        <img
-                          src={currentStep.videoUrl || "/placeholder.svg"}
-                          alt={currentStep.title}
-                          className="h-48 w-full object-cover"
-                        />
+                        {currentStep.videoUrl?.endsWith(".mp4") ? (
+                          <video
+                            src={currentStep.videoUrl}
+                            controls
+                            className="h-full w-full object-cover"
+                            preload="metadata"
+                          >
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : (
+                          <img
+                            src={currentStep.videoUrl || "/placeholder.svg"}
+                            alt={currentStep.title}
+                            className="h-48 w-full object-cover"
+                          />
+                        )}
                       </div>
 
                       {/* Tip */}

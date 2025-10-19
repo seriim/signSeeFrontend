@@ -92,20 +92,20 @@ const userStats = {
 
 export default function LearnPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
       {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm">
+      <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
             <Target className="h-6 w-6 text-primary" />
-            SignSee
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
           </Link>
           <nav className="flex items-center gap-4">
             <Link href="/translator">
-              <Button variant="ghost">Translator</Button>
+              <Button variant="ghost" className="rounded-full hover:bg-primary/10">Translator</Button>
             </Link>
             <Link href="/profile">
-              <Button variant="outline">Profile</Button>
+              <Button variant="outline" className="rounded-full border-primary/30 hover:bg-primary/10">Profile</Button>
             </Link>
           </nav>
         </div>
@@ -113,57 +113,57 @@ export default function LearnPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* User Stats Dashboard */}
-        <div className="mb-8 grid gap-4 md:grid-cols-4">
-          <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/10 to-primary/5 p-6">
+        <div className="mb-6 grid gap-3 md:grid-cols-4">
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Total Points</p>
-                <p className="text-3xl font-bold text-primary">{userStats.totalPoints}</p>
+                <p className="text-xs text-muted-foreground font-medium">Total Points</p>
+                <p className="text-2xl font-bold text-primary">{userStats.totalPoints}</p>
               </div>
-              <Star className="h-10 w-10 text-primary" />
+              <Star className="h-7 w-7 text-primary" />
             </div>
           </Card>
 
-          <Card className="border-2 border-accent/20 bg-gradient-to-br from-accent/10 to-accent/5 p-6">
+          <Card className="border-2 border-accent bg-gradient-to-b from-accent/15 to-accent/5 p-4 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Current Streak</p>
-                <p className="text-3xl font-bold text-accent">{userStats.currentStreak} days</p>
+                <p className="text-xs text-muted-foreground font-medium">Current Streak</p>
+                <p className="text-2xl font-bold text-accent">{userStats.currentStreak} days</p>
               </div>
-              <Flame className="h-10 w-10 text-accent" />
+              <Flame className="h-7 w-7 text-accent" />
             </div>
           </Card>
 
-          <Card className="border-2 border-secondary/20 bg-gradient-to-br from-secondary/10 to-secondary/5 p-6">
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Level</p>
-                <p className="text-3xl font-bold text-secondary">{userStats.level}</p>
+                <p className="text-xs text-muted-foreground font-medium">Level</p>
+                <p className="text-2xl font-bold text-primary">{userStats.level}</p>
               </div>
-              <Trophy className="h-10 w-10 text-secondary" />
+              <Trophy className="h-7 w-7 text-primary" />
             </div>
           </Card>
 
-          <Card className="border-2 border-success/20 bg-gradient-to-br from-success/10 to-success/5 p-6">
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">Badges Earned</p>
-                <p className="text-3xl font-bold text-success">{userStats.badges}</p>
+                <p className="text-xs text-muted-foreground font-medium">Badges Earned</p>
+                <p className="text-2xl font-bold text-primary">{userStats.badges}</p>
               </div>
-              <Sparkles className="h-10 w-10 text-success" />
+              <Sparkles className="h-7 w-7 text-primary" />
             </div>
           </Card>
         </div>
 
         {/* Level Progress */}
-        <Card className="mb-8 p-6">
+        <Card className="mb-6 p-4 border-2 border-primary/40 bg-white/50 rounded-2xl">
           <div className="mb-2 flex items-center justify-between">
             <h3 className="text-lg font-semibold">Level {userStats.level} Progress</h3>
             <span className="text-sm text-muted-foreground">
               {userStats.totalPoints} / {userStats.nextLevelPoints} XP
             </span>
           </div>
-          <Progress value={(userStats.totalPoints / userStats.nextLevelPoints) * 100} className="h-3" />
+          <Progress value={(userStats.totalPoints / userStats.nextLevelPoints) * 100} className="h-3 rounded-full" />
           <p className="mt-2 text-sm text-muted-foreground">
             {userStats.nextLevelPoints - userStats.totalPoints} XP until Level {userStats.level + 1}
           </p>

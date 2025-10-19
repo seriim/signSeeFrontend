@@ -64,55 +64,55 @@ export function LevelMap({ modules, userStats }: LevelMapProps) {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "Beginner":
-        return "from-green-400 to-green-500"
+        return "from-secondary to-secondary/80"
       case "Intermediate":
-        return "from-yellow-400 to-orange-500"
+        return "from-accent to-accent/80"
       case "Advanced":
-        return "from-red-400 to-red-500"
+        return "from-primary to-primary/80"
       default:
-        return "from-gray-400 to-gray-500"
+        return "from-muted to-muted/80"
     }
   }
 
   const getStatusColor = (status: string, difficulty: string) => {
     if (status === "completed") {
-      return `fill-green-500 stroke-green-600 stroke-2 cursor-pointer`
+      return `fill-secondary stroke-secondary/80 stroke-2 cursor-pointer`
     }
     if (status === "current") {
-      return `fill-blue-500 stroke-blue-600 stroke-2 cursor-pointer`
+      return `fill-primary stroke-primary/80 stroke-2 cursor-pointer`
     }
-    return `fill-gray-300 stroke-gray-400 stroke-2 cursor-pointer`
+    return `fill-muted stroke-muted/50 stroke-2 cursor-pointer`
   }
 
   const getPathColor = (fromStatus: string, toStatus: string) => {
     if (fromStatus === "completed" && toStatus === "completed") {
-      return "stroke-green-400"
+      return "stroke-secondary/60"
     }
     if (fromStatus === "completed" && toStatus === "current") {
-      return "stroke-blue-400"
+      return "stroke-primary/60"
     }
     if (fromStatus === "current" && toStatus === "locked") {
-      return "stroke-gray-300"
+      return "stroke-muted/30"
     }
-    return "stroke-gray-300"
+    return "stroke-muted/30"
   }
 
   return (
-    <div ref={containerRef} className="relative w-full overflow-hidden rounded-2xl bg-white p-4 sm:p-6 lg:p-8 shadow-lg">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100">
-        <div className="absolute inset-0 opacity-20" style={{
-          backgroundImage: 'radial-gradient(#cbd5e0 1px, transparent 1px)',
-          backgroundSize: '20px 20px'
+    <div ref={containerRef} className="relative w-full overflow-hidden rounded-3xl bg-gradient-to-b from-card to-card/80 p-4 sm:p-6 lg:p-8 border-3 border-primary">
+      {/* Subtle Ghibli-inspired background pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5">
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: 'radial-gradient(var(--primary) 1px, transparent 1px)',
+          backgroundSize: '30px 30px'
         }} />
       </div>
 
       {/* Map Title */}
       <div className="relative mb-6 sm:mb-8 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
           🎮 Learning Adventure
         </h2>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-foreground">
           Complete levels to master Jamaican Sign Language ✨
         </p>
       </div>

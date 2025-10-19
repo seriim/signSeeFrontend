@@ -116,46 +116,46 @@ export default function QuizPage() {
     const passed = percentage >= 70
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-secondary/5">
-        <header className="border-b bg-background/80 backdrop-blur-sm">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
+        <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto flex items-center justify-between px-4 py-4">
-            <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+            <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
               <Target className="h-6 w-6 text-primary" />
-              SignSee
+              <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
             </Link>
           </div>
         </header>
 
         <div className="container mx-auto px-4 py-12">
           <div className="mx-auto max-w-2xl">
-            <Card className="border-2 p-8 text-center">
+            <Card className="border-2 border-primary/40 bg-white/50 p-6 text-center rounded-2xl">
               <div
-                className={`mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full ${
+                className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full ${
                   passed ? "bg-accent/20" : "bg-secondary/20"
                 }`}
               >
-                <Trophy className={`h-12 w-12 ${passed ? "text-accent" : "text-secondary"}`} />
+                <Trophy className={`h-8 w-8 ${passed ? "text-accent" : "text-secondary"}`} />
               </div>
 
-              <h1 className="mb-2 text-3xl font-bold">Quiz Complete!</h1>
-              <p className="mb-6 text-lg text-muted-foreground">
+              <h1 className="mb-1 text-2xl font-bold">Quiz Complete!</h1>
+              <p className="mb-4 text-sm text-muted-foreground">
                 {passed ? "Congratulations! You passed!" : "Keep practicing to improve your score!"}
               </p>
 
-              <div className="mb-8 grid gap-4 md:grid-cols-3">
-                <Card className="border-2 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">Score</p>
-                  <p className="text-3xl font-bold text-primary">
+              <div className="mb-4 grid gap-3 md:grid-cols-3">
+                <Card className="border-2 border-primary/40 bg-white/50 p-3 rounded-2xl">
+                  <p className="mb-0.5 text-xs text-muted-foreground">Score</p>
+                  <p className="text-2xl font-bold text-primary">
                     {score}/{quizQuestions.length}
                   </p>
                 </Card>
-                <Card className="border-2 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">Percentage</p>
-                  <p className="text-3xl font-bold text-accent">{percentage}%</p>
+                <Card className="border-2 border-accent bg-gradient-to-b from-accent/15 to-accent/5 p-3 rounded-2xl">
+                  <p className="mb-0.5 text-xs text-muted-foreground">Percentage</p>
+                  <p className="text-2xl font-bold text-accent">{percentage}%</p>
                 </Card>
-                <Card className="border-2 p-4">
-                  <p className="mb-1 text-sm text-muted-foreground">XP Earned</p>
-                  <p className="text-3xl font-bold text-secondary">+{score * 10}</p>
+                <Card className="border-2 border-primary/40 bg-white/50 p-3 rounded-2xl">
+                  <p className="mb-0.5 text-xs text-muted-foreground">XP Earned</p>
+                  <p className="text-2xl font-bold text-primary">+{score * 10}</p>
                 </Card>
               </div>
 
@@ -193,33 +193,33 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-secondary/5">
-      <header className="border-b bg-background/80 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/3 to-accent/3">
+      <header className="border-b-2 border-primary bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold">
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold transition-transform hover:scale-105">
             <Target className="h-6 w-6 text-primary" />
-            SignSee
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">SignSee</span>
           </Link>
-          <Badge variant="outline">
+          <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/10">
             <Clock className="mr-1 h-3 w-3" />
             Question {currentQuestion + 1}/{quizQuestions.length}
           </Badge>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-12">
         <div className="mx-auto max-w-3xl">
           {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="mb-2 flex items-center justify-between text-sm">
+          <div className="mb-4">
+            <div className="mb-1 flex items-center justify-between text-xs">
               <span className="font-medium">Quiz Progress</span>
               <span className="text-muted-foreground">{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-3" />
+            <Progress value={progress} className="h-2 rounded-full" />
           </div>
 
           {/* Question Card */}
-          <Card className="border-2 p-8">
+          <Card className="border-2 border-primary/40 bg-white/50 p-4 rounded-2xl">
             <div className="mb-6">
               <Badge className="mb-4 bg-primary/10 text-primary">
                 {question.type === "multiple-choice"

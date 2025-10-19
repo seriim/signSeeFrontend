@@ -83,7 +83,7 @@ export default function HomePage() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Card className="group relative overflow-hidden border-2 p-6 transition-all hover:border-primary hover:shadow-lg">
+          <Card className="group relative overflow-hidden border-2 p-6  ">
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Target className="h-6 w-6" />
             </div>
@@ -94,7 +94,7 @@ export default function HomePage() {
             </p>
           </Card>
 
-          <Card className="group relative overflow-hidden border-2 p-6 transition-all hover:border-accent hover:shadow-lg">
+          <Card className="group relative overflow-hidden border-2 p-6  ">
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
               <Brain className="h-6 w-6" />
             </div>
@@ -105,7 +105,7 @@ export default function HomePage() {
             </p>
           </Card>
 
-          <Card className="group relative overflow-hidden border-2 p-6 transition-all hover:border-secondary hover:shadow-lg">
+          <Card className="group relative overflow-hidden border-2 p-6  ">
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
               <Video className="h-6 w-6" />
             </div>
@@ -116,7 +116,7 @@ export default function HomePage() {
             </p>
           </Card>
 
-          <Card className="group relative overflow-hidden border-2 p-6 transition-all hover:border-primary hover:shadow-lg">
+          <Card className="group relative overflow-hidden border-2 p-6  ">
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <Trophy className="h-6 w-6" />
             </div>
@@ -127,7 +127,7 @@ export default function HomePage() {
             </p>
           </Card>
 
-          <Card className="group relative overflow-hidden border-2 p-6 transition-all hover:border-accent hover:shadow-lg">
+          <Card className="group relative overflow-hidden border-2 p-6  ">
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-accent/10 text-accent">
               <Flame className="h-6 w-6" />
             </div>
@@ -138,7 +138,7 @@ export default function HomePage() {
             </p>
           </Card>
 
-          <Card className="group relative overflow-hidden border-2 p-6 transition-all hover:border-secondary hover:shadow-lg">
+          <Card className="group relative overflow-hidden border-2 p-6 transition-all ">
             <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/10 text-secondary">
               <Hand className="h-6 w-6" />
             </div>
@@ -155,7 +155,7 @@ export default function HomePage() {
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20">
-        <Card className="relative overflow-hidden border-2 bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 p-12 text-center hover:border-primary hover:shadow-lg">
+        <Card className="relative overflow-hidden border-2 bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 p-12 text-center ">
           <div className="relative z-10">
             <h2 className="mb-4 text-4xl font-bold text-balance">
               Ready to Bridge the Communication Gap?
@@ -174,7 +174,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t py-4">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <div className="flex items-center justify-between gap-4 ">
             <div className="flex items-center gap-2">
               <img className="w-[100px]" src="/logo.png" alt="logo" />
               <span className="text-xl font-bold">SignSee</span>
@@ -197,7 +197,9 @@ export default function HomePage() {
               </ul>
             </div>
 
-            <p className="">Bridging communication one sign at a time.</p>
+            <p className="hidden lg:block">
+              Bridging communication one sign at a time.
+            </p>
           </div>
         </div>
       </footer>

@@ -1,21 +1,6 @@
 "use client";
 
-<<<<<<< HEAD
-import { useState, use } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Target, Trophy, Clock, CheckCircle2, XCircle, ArrowRight, Home } from "lucide-react"
-import { getModuleQuiz } from "@/lib/module-quizzes"
-
-export default function ModuleQuizPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const moduleId = Number.parseInt(id)
-  const quizQuestions = getModuleQuiz(moduleId)
-=======
-import { useState } from "react";
+import { useState, use } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -31,9 +16,6 @@ import {
   Home,
 } from "lucide-react";
 import { getModuleQuiz } from "@/lib/module-quizzes";
-
-import { use } from "react";
->>>>>>> 725faf1ab5f37ee8ac692dad99f5aed7d577c77e
 
 export default function ModuleQuizPage({
   params,

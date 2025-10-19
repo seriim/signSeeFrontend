@@ -138,7 +138,7 @@ export default function LessonPage({ params }: { params: { id: string } }) {
               {lessonContent.moduleTitle}
             </Link>
             <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-primary" />
+              <img src="/logo.png" alt="Logo" />
               <span className="font-bold">SignSee</span>
             </div>
           </div>

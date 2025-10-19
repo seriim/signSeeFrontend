@@ -1,42 +1,64 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { ArrowLeft, ArrowRight, CheckCircle2, Star, Trophy, Target, Sparkles, Play, BookOpen } from "lucide-react"
-import { getLessonsForModule } from "@/lib/mock-data"
-import { useProgress } from "@/hooks/use-progress"
-import type { Lesson, LessonContent } from "@/lib/types"
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Star,
+  Trophy,
+  Target,
+  Sparkles,
+  Play,
+  BookOpen,
+} from "lucide-react";
+import { getLessonsForModule } from "@/lib/mock-data";
+import { useProgress } from "@/hooks/use-progress";
+import type { Lesson, LessonContent } from "@/lib/types";
 
 // Module metadata
 const moduleMetadata = {
-  1: { title: "JSL Basics", description: "Learn the fundamentals of Jamaican Sign Language" },
-  2: { title: "Alphabet & Numbers", description: "Master the JSL alphabet and number signs" },
-  3: { title: "Numbers 1-20", description: "Learn to sign numbers from 1 to 20" },
-  4: { title: "Common Phrases", description: "Everyday phrases for basic communication" },
-}
+  1: {
+    title: "JSL Basics",
+    description: "Learn the fundamentals of Jamaican Sign Language",
+  },
+  2: {
+    title: "Alphabet & Numbers",
+    description: "Master the JSL alphabet and number signs",
+  },
+  3: {
+    title: "Numbers 1-20",
+    description: "Learn to sign numbers from 1 to 20",
+  },
+  4: {
+    title: "Common Phrases",
+    description: "Everyday phrases for basic communication",
+  },
+};
 
 export default function ModulePage({ params }: { params: { id: string } }) {
-  const moduleId = Number.parseInt(params.id)
-  const metadata = moduleMetadata[moduleId as keyof typeof moduleMetadata]
-  const { completeLesson, completeModule, progress, isLoaded } = useProgress()
-  
+  const moduleId = Number.parseInt(params.id);
+  const metadata = moduleMetadata[moduleId as keyof typeof moduleMetadata];
+  const { completeLesson, completeModule, progress, isLoaded } = useProgress();
+
   // Get lessons for this module
-  const lessons = getLessonsForModule(moduleId)
-  
-  const [currentLessonIndex, setCurrentLessonIndex] = useState(0)
-  const [currentContentIndex, setCurrentContentIndex] = useState(0)
-  const [completedLessons, setCompletedLessons] = useState<string[]>([])
-  const [showQuiz, setShowQuiz] = useState(false)
-  const [quizAnswered, setQuizAnswered] = useState(false)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const lessons = getLessonsForModule(moduleId);
+
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
+  const [currentContentIndex, setCurrentContentIndex] = useState(0);
+  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizAnswered, setQuizAnswered] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   // Get module progress from global state
-  const moduleProgress = progress.modules.find(m => m.id === moduleId)
-  const isModuleCompleted = moduleProgress?.completed || false
+  const moduleProgress = progress.modules.find((m) => m.id === moduleId);
+  const isModuleCompleted = moduleProgress?.completed || false;
 
   // Show loading state while progress is being loaded
   if (!isLoaded) {
@@ -47,7 +69,7 @@ export default function ModulePage({ params }: { params: { id: string } }) {
           <p className="text-muted-foreground">Loading your progress...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!metadata) {
@@ -60,95 +82,93 @@ export default function ModulePage({ params }: { params: { id: string } }) {
           </Link>
         </Card>
       </div>
-    )
+    );
   }
 
-  const currentLesson = lessons[currentLessonIndex]
-  const lessonContent = currentLesson.content || []
-  const currentStep = lessonContent[currentContentIndex]
-  
-  const totalSteps = lessonContent.length
-  const progressPercentage = ((currentContentIndex + 1) / totalSteps) * 100
-  const allLessonsCompleted = completedLessons.length === lessons.length
-  const totalXP = lessons.reduce((sum, lesson) => sum + lesson.xpReward, 0)
+  const currentLesson = lessons[currentLessonIndex];
+  const lessonContent = currentLesson.content || [];
+  const currentStep = lessonContent[currentContentIndex];
+
+  const totalSteps = lessonContent.length;
+  const progressPercentage = ((currentContentIndex + 1) / totalSteps) * 100;
+  const allLessonsCompleted = completedLessons.length === lessons.length;
+  const totalXP = lessons.reduce((sum, lesson) => sum + lesson.xpReward, 0);
   const completedXP = completedLessons.reduce((sum, id) => {
-    const lesson = lessons.find(l => l.id === id)
-    return sum + (lesson?.xpReward || 0)
-  }, 0)
+    const lesson = lessons.find((l) => l.id === id);
+    return sum + (lesson?.xpReward || 0);
+  }, 0);
 
   const handleNextStep = () => {
     if (currentContentIndex < totalSteps - 1) {
-      setCurrentContentIndex(currentContentIndex + 1)
-      setSelectedAnswer(null)
-      setQuizAnswered(false)
+      setCurrentContentIndex(currentContentIndex + 1);
+      setSelectedAnswer(null);
+      setQuizAnswered(false);
     } else if (currentLessonIndex < lessons.length - 1) {
       // Move to next lesson
       if (!completedLessons.includes(currentLesson.id)) {
-        setCompletedLessons([...completedLessons, currentLesson.id])
+        setCompletedLessons([...completedLessons, currentLesson.id]);
         // Mark lesson as completed in global progress
-        completeLesson(moduleId, currentLesson.id, currentLesson.xpReward)
+        completeLesson(moduleId, currentLesson.id, currentLesson.xpReward);
       }
-      setCurrentLessonIndex(currentLessonIndex + 1)
-      setCurrentContentIndex(0)
-      setSelectedAnswer(null)
-      setQuizAnswered(false)
+      setCurrentLessonIndex(currentLessonIndex + 1);
+      setCurrentContentIndex(0);
+      setSelectedAnswer(null);
+      setQuizAnswered(false);
     } else {
       // All lessons completed, mark current lesson as completed
       if (!completedLessons.includes(currentLesson.id)) {
-        setCompletedLessons([...completedLessons, currentLesson.id])
+        setCompletedLessons([...completedLessons, currentLesson.id]);
         // Mark lesson as completed in global progress
-        completeLesson(moduleId, currentLesson.id, currentLesson.xpReward)
+        completeLesson(moduleId, currentLesson.id, currentLesson.xpReward);
       }
       // Don't automatically show quiz - let user choose when to take it
     }
-  }
+  };
 
   const handlePreviousStep = () => {
     if (currentContentIndex > 0) {
-      setCurrentContentIndex(currentContentIndex - 1)
-      setSelectedAnswer(null)
-      setQuizAnswered(false)
+      setCurrentContentIndex(currentContentIndex - 1);
+      setSelectedAnswer(null);
+      setQuizAnswered(false);
     } else if (currentLessonIndex > 0) {
-      setCurrentLessonIndex(currentLessonIndex - 1)
-      setCurrentContentIndex(lessonContent.length - 1)
-      setSelectedAnswer(null)
-      setQuizAnswered(false)
+      setCurrentLessonIndex(currentLessonIndex - 1);
+      setCurrentContentIndex(lessonContent.length - 1);
+      setSelectedAnswer(null);
+      setQuizAnswered(false);
     }
-  }
+  };
 
   const handleQuizAnswer = (index: number) => {
-    setSelectedAnswer(index)
-    setQuizAnswered(true)
-  }
+    setSelectedAnswer(index);
+    setQuizAnswered(true);
+  };
 
   const handleModuleComplete = () => {
     // Mark module as completed in global progress
-    completeModule(moduleId)
+    completeModule(moduleId);
     // Navigate back to learn page to see updated progress
-    window.location.href = "/learn"
-  }
-
+    window.location.href = "/learn";
+  };
 
   const canProceed = () => {
-    if (!currentStep) return false
-    if (currentStep.type === "instruction") return true
-    if (currentStep.type === "quiz") return quizAnswered
-    return false
-  }
+    if (!currentStep) return false;
+    if (currentStep.type === "instruction") return true;
+    if (currentStep.type === "quiz") return quizAnswered;
+    return false;
+  };
 
   if (showQuiz && allLessonsCompleted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
         <header className="border-b bg-background/80 backdrop-blur-sm">
           <div className="container mx-auto flex items-center justify-between px-4 py-4">
-            <Link href="/learn" className="flex items-center gap-2 text-sm font-medium hover:text-primary">
+            <Link
+              href="/learn"
+              className="flex items-center gap-2 text-sm font-medium hover:text-primary"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back to Learning Path
             </Link>
-            <div className="flex items-center gap-2 text-xl font-bold">
-              <Target className="h-5 w-5 text-primary" />
-              SignSee
-            </div>
           </div>
         </header>
 
@@ -156,11 +176,15 @@ export default function ModulePage({ params }: { params: { id: string } }) {
           <div className="mx-auto max-w-2xl">
             <Card className="border-2 border-success/30 bg-gradient-to-br from-success/10 to-success/5 p-8 text-center">
               <Trophy className="mx-auto mb-4 h-16 w-16 text-success" />
-              <h2 className="mb-2 text-3xl font-bold">Module Complete! 🎉</h2>
-              <p className="mb-6 text-lg text-muted-foreground">You've completed all lessons in {metadata.title}</p>
-              
+              <h2 className="mb-2 text-3xl font-bold">Module Complete! </h2>
+              <p className="mb-6 text-lg text-muted-foreground">
+                You've completed all lessons in {metadata.title}
+              </p>
+
               <div className="mb-8 rounded-lg bg-white/50 p-6">
-                <p className="mb-2 text-sm text-muted-foreground">Total XP Earned</p>
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Total XP Earned
+                </p>
                 <p className="text-4xl font-bold text-primary">{totalXP} XP</p>
               </div>
 
@@ -184,7 +208,7 @@ export default function ModulePage({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -193,14 +217,14 @@ export default function ModulePage({ params }: { params: { id: string } }) {
       <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between mb-3">
-            <Link href="/learn" className="flex items-center gap-2 text-sm font-medium hover:text-primary">
+            <Link
+              href="/learn"
+              className="flex items-center gap-2 text-sm font-medium hover:text-primary"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back
             </Link>
-            <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-primary" />
-              <span className="font-bold">SignSee</span>
-            </div>
+
             <Badge variant="default" className="text-sm">
               <Star className="mr-1 h-3 w-3" />
               {completedXP} / {totalXP} XP
@@ -228,13 +252,20 @@ export default function ModulePage({ params }: { params: { id: string } }) {
               <Card className="border-2 p-8 max-w-2xl mx-auto text-center">
                 <div className="mb-6">
                   <Trophy className="h-16 w-16 text-accent mx-auto mb-4" />
-                  <h2 className="text-3xl font-bold mb-2">Module Complete! 🎉</h2>
+                  <h2 className="text-3xl font-bold mb-2">
+                    Module Complete! 🎉
+                  </h2>
                   <p className="text-lg text-muted-foreground mb-4">
-                    Congratulations! You've completed all {lessons.length} lessons in {metadata.title}
+                    Congratulations! You've completed all {lessons.length}{" "}
+                    lessons in {metadata.title}
                   </p>
                   <div className="bg-accent/10 rounded-lg p-4 mb-6">
-                    <p className="text-sm font-semibold text-accent mb-1">Total XP Earned</p>
-                    <p className="text-2xl font-bold text-accent">{totalXP} XP</p>
+                    <p className="text-sm font-semibold text-accent mb-1">
+                      Total XP Earned
+                    </p>
+                    <p className="text-2xl font-bold text-accent">
+                      {totalXP} XP
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -249,9 +280,9 @@ export default function ModulePage({ params }: { params: { id: string } }) {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      setCurrentLessonIndex(0)
-                      setCurrentContentIndex(0)
-                      setCompletedLessons([])
+                      setCurrentLessonIndex(0);
+                      setCurrentContentIndex(0);
+                      setCompletedLessons([]);
                     }}
                     size="lg"
                     className="w-full"
@@ -261,113 +292,143 @@ export default function ModulePage({ params }: { params: { id: string } }) {
                   </Button>
                 </div>
               </Card>
-            ) : currentStep && (
-              <Card className="border-2 p-6 max-w-2xl mx-auto">
-                {/* Step Badge */}
-                <div className="mb-2">
-                  <Badge
-                    variant={currentStep.type === "instruction" ? "default" : "outline"}
-                    className="text-xs"
-                  >
-                    {currentStep.type === "instruction" && "Instruction"}
-                    {currentStep.type === "quiz" && "Quick Check"}
-                  </Badge>
-                </div>
-
-                {/* Step Title */}
-                <h2 className="mb-4 text-2xl font-bold">{currentStep.title}</h2>
-
-                {/* Instruction Step */}
-                {currentStep.type === "instruction" && (
-                  <div className="space-y-4">
-                    <p className="text-base text-muted-foreground leading-relaxed">{currentStep.description}</p>
-
-                    {/* Video/Image */}
-                    <div className="overflow-hidden rounded-xl bg-muted shadow-sm">
-                      <img 
-                        src={currentStep.videoUrl || "/placeholder.svg"} 
-                        alt={currentStep.title} 
-                        className="h-48 w-full object-cover"
-                      />
-                    </div>
-
-                    {/* Tip */}
-                    {currentStep.tip && (
-                      <Card className="border-l-4 border-l-accent bg-accent/5 p-4">
-                        <div className="flex items-start gap-3">
-                          <Sparkles className="mt-1 h-4 w-4 flex-shrink-0 text-accent" />
-                          <div>
-                            <p className="text-sm font-semibold text-accent">Pro Tip</p>
-                            <p className="text-sm text-muted-foreground mt-1">{currentStep.tip}</p>
-                          </div>
-                        </div>
-                      </Card>
-                    )}
+            ) : (
+              currentStep && (
+                <Card className="border-2 p-6 max-w-2xl mx-auto">
+                  {/* Step Badge */}
+                  <div className="mb-2">
+                    <Badge
+                      variant={
+                        currentStep.type === "instruction"
+                          ? "default"
+                          : "outline"
+                      }
+                      className="text-xs"
+                    >
+                      {currentStep.type === "instruction" && "Instruction"}
+                      {currentStep.type === "quiz" && "Quick Check"}
+                    </Badge>
                   </div>
-                )}
 
+                  {/* Step Title */}
+                  <h2 className="mb-4 text-2xl font-bold">
+                    {currentStep.title}
+                  </h2>
 
-                {/* Quiz Step */}
-                {currentStep.type === "quiz" && (
-                  <div className="space-y-4">
-                    <p className="text-base text-muted-foreground leading-relaxed">{currentStep.description}</p>
+                  {/* Instruction Step */}
+                  {currentStep.type === "instruction" && (
+                    <div className="space-y-4">
+                      <p className="text-base text-muted-foreground leading-relaxed">
+                        {currentStep.description}
+                      </p>
 
-                    <div className="space-y-3">
-                      {currentStep.options?.map((option, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleQuizAnswer(index)}
-                          disabled={quizAnswered}
-                          className={`w-full rounded-lg border-2 p-4 text-left transition-all ${
-                            selectedAnswer === index
-                              ? quizAnswered && index === currentStep.correctAnswer
-                                ? "border-success bg-success/10"
-                                : quizAnswered
+                      {/* Video/Image */}
+                      <div className="overflow-hidden rounded-xl bg-muted shadow-sm">
+                        <img
+                          src={currentStep.videoUrl || "/placeholder.svg"}
+                          alt={currentStep.title}
+                          className="h-48 w-full object-cover"
+                        />
+                      </div>
+
+                      {/* Tip */}
+                      {currentStep.tip && (
+                        <Card className="border-l-4 border-l-accent bg-accent/5 p-4">
+                          <div className="flex items-start gap-3">
+                            <Sparkles className="mt-1 h-4 w-4 flex-shrink-0 text-accent" />
+                            <div>
+                              <p className="text-sm font-semibold text-accent">
+                                Pro Tip
+                              </p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {currentStep.tip}
+                              </p>
+                            </div>
+                          </div>
+                        </Card>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Quiz Step */}
+                  {currentStep.type === "quiz" && (
+                    <div className="space-y-4">
+                      <p className="text-base text-muted-foreground leading-relaxed">
+                        {currentStep.description}
+                      </p>
+
+                      <div className="space-y-3">
+                        {currentStep.options?.map((option, index) => (
+                          <button
+                            key={index}
+                            onClick={() => handleQuizAnswer(index)}
+                            disabled={quizAnswered}
+                            className={`w-full rounded-lg border-2 p-4 text-left transition-all ${
+                              selectedAnswer === index
+                                ? quizAnswered &&
+                                  index === currentStep.correctAnswer
+                                  ? "border-success bg-success/10"
+                                  : quizAnswered
                                   ? "border-destructive bg-destructive/10"
                                   : "border-primary bg-primary/10"
-                              : "border-border hover:border-primary"
-                          } ${quizAnswered ? "cursor-not-allowed" : "cursor-pointer"}`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="font-medium text-sm">{option}</span>
-                            {quizAnswered && index === currentStep.correctAnswer && (
-                              <CheckCircle2 className="h-4 w-4 text-success" />
-                            )}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
+                                : "border-border hover:border-primary"
+                            } ${
+                              quizAnswered
+                                ? "cursor-not-allowed"
+                                : "cursor-pointer"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-sm">
+                                {option}
+                              </span>
+                              {quizAnswered &&
+                                index === currentStep.correctAnswer && (
+                                  <CheckCircle2 className="h-4 w-4 text-success" />
+                                )}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
 
-                    {quizAnswered && (
-                      <Card
-                        className={`border-l-4 p-4 ${
-                          selectedAnswer === currentStep.correctAnswer
-                            ? "border-l-success bg-success/5"
-                            : "border-l-destructive bg-destructive/5"
-                        }`}
-                      >
-                        <p className="text-sm font-semibold">
-                          {selectedAnswer === currentStep.correctAnswer ? "Correct!" : "Not quite right"}
-                        </p>
-                        <p className="text-sm text-muted-foreground mt-1">
-                          {selectedAnswer === currentStep.correctAnswer
-                            ? "Great job!"
-                            : "The correct answer is: " + currentStep.options?.[currentStep.correctAnswer || 0]}
-                        </p>
-                      </Card>
-                    )}
-                  </div>
-                )}
-              </Card>
+                      {quizAnswered && (
+                        <Card
+                          className={`border-l-4 p-4 ${
+                            selectedAnswer === currentStep.correctAnswer
+                              ? "border-l-success bg-success/5"
+                              : "border-l-destructive bg-destructive/5"
+                          }`}
+                        >
+                          <p className="text-sm font-semibold">
+                            {selectedAnswer === currentStep.correctAnswer
+                              ? "Correct!"
+                              : "Not quite right"}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            {selectedAnswer === currentStep.correctAnswer
+                              ? "Great job!"
+                              : "The correct answer is: " +
+                                currentStep.options?.[
+                                  currentStep.correctAnswer || 0
+                                ]}
+                          </p>
+                        </Card>
+                      )}
+                    </div>
+                  )}
+                </Card>
+              )
             )}
 
             {/* Navigation - Only show when not all lessons completed */}
             {!allLessonsCompleted && (
               <div className="mt-6 flex items-center justify-between gap-4 max-w-2xl mx-auto">
-                <Button 
-                  variant="outline" 
-                  onClick={handlePreviousStep} 
-                  disabled={currentLessonIndex === 0 && currentContentIndex === 0}
+                <Button
+                  variant="outline"
+                  onClick={handlePreviousStep}
+                  disabled={
+                    currentLessonIndex === 0 && currentContentIndex === 0
+                  }
                   size="lg"
                   className="px-6"
                 >
@@ -375,13 +436,14 @@ export default function ModulePage({ params }: { params: { id: string } }) {
                   Previous
                 </Button>
 
-                <Button 
+                <Button
                   onClick={handleNextStep}
                   disabled={!canProceed()}
                   size="lg"
                   className="px-6"
                 >
-                  {currentLessonIndex === lessons.length - 1 && currentContentIndex === totalSteps - 1
+                  {currentLessonIndex === lessons.length - 1 &&
+                  currentContentIndex === totalSteps - 1
                     ? "Complete Module"
                     : "Next"}
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -399,43 +461,51 @@ export default function ModulePage({ params }: { params: { id: string } }) {
                   <button
                     key={lesson.id}
                     onClick={() => {
-                      setCurrentLessonIndex(index)
-                      setCurrentContentIndex(0)
-                      setSelectedAnswer(null)
-                      setQuizAnswered(false)
+                      setCurrentLessonIndex(index);
+                      setCurrentContentIndex(0);
+                      setSelectedAnswer(null);
+                      setQuizAnswered(false);
                     }}
                     className={`w-full rounded-lg border-2 p-3 text-left text-xs transition-all ${
                       index === currentLessonIndex
                         ? "border-primary bg-primary/10"
                         : completedLessons.includes(lesson.id)
-                          ? "border-success/30 bg-success/5 hover:border-success/50"
-                          : "border-border hover:border-primary"
+                        ? "border-success/30 bg-success/5 hover:border-success/50"
+                        : "border-border hover:border-primary"
                     }`}
                   >
                     <div className="flex items-center gap-2">
                       {completedLessons.includes(lesson.id) ? (
                         <CheckCircle2 className="h-4 w-4 text-success flex-shrink-0" />
                       ) : (
-                        <div className={`h-4 w-4 rounded-full flex-shrink-0 ${
-                          index === currentLessonIndex ? "bg-primary" : "bg-muted"
-                        }`} />
+                        <div
+                          className={`h-4 w-4 rounded-full flex-shrink-0 ${
+                            index === currentLessonIndex
+                              ? "bg-primary"
+                              : "bg-muted"
+                          }`}
+                        />
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="font-medium truncate">{lesson.title}</p>
-                        <p className="text-xs text-muted-foreground">{lesson.duration} min</p>
+                        <p className="text-xs text-muted-foreground">
+                          {lesson.duration} min
+                        </p>
                       </div>
                     </div>
                   </button>
                 ))}
               </div>
-              
+
               {/* Module Completion Section */}
               {allLessonsCompleted && (
                 <div className="mt-4 pt-4 border-t border-border">
                   <div className="text-center">
                     <div className="mb-3">
                       <Trophy className="h-8 w-8 text-accent mx-auto mb-2" />
-                      <h4 className="font-semibold text-sm text-accent">Module Complete!</h4>
+                      <h4 className="font-semibold text-sm text-accent">
+                        Module Complete!
+                      </h4>
                       <p className="text-xs text-muted-foreground mt-1">
                         All {lessons.length} lessons completed
                       </p>
@@ -457,5 +527,5 @@ export default function ModulePage({ params }: { params: { id: string } }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

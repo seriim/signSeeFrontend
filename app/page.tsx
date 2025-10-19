@@ -55,10 +55,7 @@ export default function HomePage() {
 
             <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
               <Button size="lg" className="text-lg" asChild>
-                <Link href="/learn">
-                  Start Learning Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
+                <Link href="/learn">Start Learning Free</Link>
               </Button>
               <Button
                 size="lg"
@@ -168,10 +165,7 @@ export default function HomePage() {
               Jamaica
             </p>
             <Button size="lg" className="text-lg" asChild>
-              <Link href="/learn">
-                Start Your Journey Today
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+              <Link href="/learn">Start Your Journey Today</Link>
             </Button>
           </div>
         </Card>
@@ -185,17 +179,16 @@ export default function HomePage() {
               <img className="w-[100px]" src="/logo.png" alt="logo" />
               <span className="text-xl font-bold">SignSee</span>
             </div>
-            <div className="flex gap-5 justify-center text-sm text-muted-foreground text-center">
-              <ul className="text-sm text-muted-foreground text-center">
+            <div className="flex gap-5 justify-center">
+              <ul className="flex text-center gap-5">
                 {links.map((link) => {
                   const Icon = link.icon;
                   return (
                     <li key={link.href}>
                       <a
                         href={link.href}
-                        className="flex items-center justify-center gap-2 underline"
+                        className="flex items-center justify-center gap-5"
                       >
-                        <Icon className="w-4 h-4" />
                         {link.label}
                       </a>
                     </li>

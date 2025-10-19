@@ -388,7 +388,7 @@ export function LevelMap({ modules, userStats }: LevelMapProps) {
                       className="w-full flex justify-center center"
                     >
                       <Button
-                        className="mx-r-20 w-[50%] py-3 rounded-2xl font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+                        className="cursor-pointer mx-r-20 w-[50%] py-3 rounded-2xl font-semibold text-white bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
                         size="lg"
                       >
                         <Trophy className="mr-2 h-5 w-5" />
@@ -502,7 +502,7 @@ export function LevelMap({ modules, userStats }: LevelMapProps) {
                       className="w-full  flex justify-center center"
                     >
                       <Button
-                        className={`w-[50%] py-3 rounded-2xl font-semibold text-white ${
+                        className={`cursor-pointer w-[50%] py-3 rounded-2xl font-semibold text-white ${
                           module.difficulty === "Beginner"
                             ? "bg-blue-500 hover:bg-blue-600"
                             : module.difficulty === "Intermediate"
@@ -525,7 +525,7 @@ export function LevelMap({ modules, userStats }: LevelMapProps) {
                     </Link>
                   ) : (
                     <Button
-                      className="w-[55%] py-3 rounded-2xl font-semibold bg-gray-200 text-gray-600 hover:bg-gray-300"
+                      className="cursor-pointer w-[55%] py-3 rounded-2xl font-semibold bg-gray-200 text-gray-600 hover:bg-gray-300"
                       disabled
                       size="lg"
                     >
